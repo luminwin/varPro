@@ -397,13 +397,13 @@ h1 { /* Header 1 */
 </style>
 <style>
 p.comment {
+background-color: #DBDBDB;
 padding: 10px;
-border: 0px solid black;
+border: 1px solid black;
 margin-left: 0px;
 font-family: sans-serif;
 font-style: calibri-light;
 border-radius: 5px;
-font-size: 13px;
 }
 </style>
 <style>
@@ -489,13 +489,15 @@ split-weights may instead rely on permutation importance.</p></li>
 <p>To use lasso effectively, all variables (including factors) are
 converted to real-valued features via one-hot encoding.</p>
 <p>You can customize how split-weights are computed using the
-split.weight.method option:</p>
+<code>split.weight.method</code> option:</p>
 <ul>
 <li><p>“lasso” – Use only lasso coefficients.</p></li>
 <li><p>“lasso tree” – Combine lasso with tree-based importance.</p></li>
 <li><p>“lasso vimp” – Combine lasso with permutation
 importance.</p></li>
 </ul>
+<p>See <a href="getstarted.html#different-split-weight-methods">R
+code</a></p>
 </div>
 <div class="section level2">
 <h2 id="variable-selection-and-thresholding">Variable Selection and Thresholding<a class="anchor" aria-label="anchor" href="#variable-selection-and-thresholding"></a>
@@ -509,8 +511,9 @@ variables.</p>
 <h2 id="performance-and-customization">Performance and Customization<a class="anchor" aria-label="anchor" href="#performance-and-customization"></a>
 </h2>
 <ul>
-<li><p>For faster runtimes, use fewer trees (ntree) and increase the
-minimum terminal node size (nodesize).</p></li>
+<li><p>For faster runtimes, use fewer trees (<code>ntree</code>) and
+increase the minimum terminal node size
+(<code>nodesize</code>).</p></li>
 <li><p>Additional tuning options are available. See the examples section
 for more details.</p></li>
 </ul>
@@ -521,8 +524,7 @@ for more details.</p></li>
 <p>For binary classification tasks with class imbalance, VarPro
 automatically uses Random Forest Quantile Classification (RFQ) under the
 geometric mean (gmean) performance metric. This behavior can be
-overridden with the use.rfq option.</p>
-<p>(Reference: O’Brien and Ishwaran, 2019)</p>
+overridden with the <code>use.rfq</code> option (see <span class="citation">[1]</span> and <span class="citation">[2]</span>).</p>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -581,24 +583,21 @@ Github via typing the following command in R console:</p>
 <span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="do">## plot importance values</span></span>
 <span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="fu">importance</span>(o, <span class="at">plot.it =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><br><img src="pic%2Fairquality.png" style="width:60.0%"><br> In the
-above output, lines 1-5 display the VarPro importance in the
-<code>airquality</code>: the first column lists the name of the
-variable, the second columns listed the estimator for the VarPro
-importance value
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>Δ</mi><mo accent="true">‾</mo></mover><mi>n</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\bar{\Delta}_n(s)</annotation></semantics></math>
-in equation XXX followed by its standard devidation, and the last column
-shows the VarPro standardized importance
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mrow><mi>n</mi><mo>,</mo><mi>B</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>s</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I_{n,B}(s)</annotation></semantics></math>
-in algorithm XXX.</p>
+above output, <code>print(imp)</code> display the VarPro importance in
+the <code>Boston</code>: the first column lists the name of the
+variable, the following columns listed the estimator for the VarPro
+importance value, followed by its standard devidation, and the last
+column shows the VarPro standardized importance. Note that
+<code>local.std = TRUE</code> averaged T test statistics then
+<code>std = 1</code>, cutoff is based on pure noise;
+<code>local.std = FALSE</code> directly implement Algorithm 1 from <span class="citation">[3]</span> (read the paper <a href="https://arxiv.org/abs/2409.09003" class="external-link">here</a>).</p>
 <p>In the above figure, important variables are marked in red color
 while noise variables are marked in blue color.</p>
-<p>Note that not all of the variables will be listed nor plotted in the
+<p class="comment">
+Note that not all of the variables will be listed nor plotted in the
 output since the varPro algorithm prefilters noise variables before
-calculating the importance values.</p>
-<p>XXXX BostonHousing XXXXX XXX what is a rule Example 1 but no zeta
-Figure 2 XXX XXX local.std = TRUE averaged T test statistics then std =
-1, cutoff is based on pure noise ; local.std = FALSE Algorithm 1
-XXXX</p>
+calculating the importance values.
+</p>
 <div class="section level4">
 <h4 id="cross-validated-cutoff-value-for-varpro">Cross-Validated Cutoff Value for VarPro<a class="anchor" aria-label="anchor" href="#cross-validated-cutoff-value-for-varpro"></a>
 </h4>
@@ -611,47 +610,65 @@ error</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">cv.varpro</span>(Ozone <span class="sc">~</span> ., <span class="at">data =</span> airquality)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">print</span>(o)</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">1</span>   <span class="sc">$</span>imp</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">2</span>     variable        z</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">3</span>   <span class="dv">1</span>     Temp <span class="fl">2.785948</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">4</span>   <span class="dv">2</span>     Wind <span class="fl">1.083270</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">5</span>   <span class="sc">$</span>imp.conserve</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">6</span>     variable        z</span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">7</span>   <span class="dv">1</span>     Temp <span class="fl">2.785948</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">8</span>   <span class="dv">2</span>     Wind <span class="fl">1.083270</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="sc">$</span>imp</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  variable         z</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="dv">1</span>    lstat <span class="fl">3.6781189</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="dv">2</span>       rm <span class="fl">3.4421867</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="dv">3</span>  ptratio <span class="fl">2.0686261</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="dv">4</span>      nox <span class="fl">1.2541217</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="dv">5</span>     crim <span class="fl">1.2162352</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="dv">6</span>      dis <span class="fl">1.0108895</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="dv">7</span>    black <span class="fl">0.4816799</span></span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="sc">&gt;</span>  <span class="dv">9</span>   <span class="sc">$</span>imp.liberal</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">10</span>     variable        z</span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">11</span>   <span class="dv">1</span>     Temp <span class="fl">2.785948</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">12</span>   <span class="dv">2</span>     Wind <span class="fl">1.083270</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">13</span>   <span class="sc">$</span>err</span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">14</span>            zcut nvar       err         sd</span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">15</span>   [<span class="dv">1</span>,] <span class="fl">0.100000</span>    <span class="dv">2</span> <span class="fl">0.3514603</span> <span class="fl">0.03006493</span></span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">16</span>   [<span class="dv">2</span>,] <span class="fl">1.108163</span>    <span class="dv">1</span> <span class="fl">0.4577657</span> <span class="fl">0.02080288</span></span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">17</span>   <span class="sc">$</span>zcut</span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">18</span>   [<span class="dv">1</span>] <span class="fl">0.1</span></span>
-<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">19</span>   <span class="sc">$</span>zcut.conserve</span>
-<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">20</span>   [<span class="dv">1</span>] <span class="fl">0.1</span></span>
-<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">21</span>   <span class="sc">$</span>zcut.liberal</span>
-<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">20</span>   [<span class="dv">1</span>] <span class="fl">0.1</span></span></code></pre></div>
-<p>In the above output, lines 1-4 display the final list of variables
-that minimize out-of-sample error rate of a Random Forest, where the
-error rates were listed in lines 13-16. Its cutoff value for the VarPro
-standardized importance is listed in lines 17-18. Lines 5-12 display a
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="sc">$</span>imp.conserve</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>  variable        z</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="dv">1</span>    lstat <span class="fl">3.678119</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="dv">2</span>       rm <span class="fl">3.442187</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="dv">3</span>  ptratio <span class="fl">2.068626</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="dv">4</span>      nox <span class="fl">1.254122</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="sc">$</span>imp.liberal</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>  variable         z</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="dv">1</span>    lstat <span class="fl">3.6781189</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="dv">2</span>       rm <span class="fl">3.4421867</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="dv">3</span>  ptratio <span class="fl">2.0686261</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="dv">4</span>      nox <span class="fl">1.2541217</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="dv">5</span>     crim <span class="fl">1.2162352</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="dv">6</span>      dis <span class="fl">1.0108895</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="dv">7</span>    black <span class="fl">0.4816799</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="sc">$</span>err</span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a>          zcut nvar       err          sd</span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a>[<span class="dv">1</span>,] <span class="fl">0.1000000</span>    <span class="dv">7</span> <span class="fl">0.2039396</span> <span class="fl">0.008710617</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a>[<span class="dv">2</span>,] <span class="fl">0.4877551</span>    <span class="dv">6</span> <span class="fl">0.2162618</span> <span class="fl">0.011050992</span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a>[<span class="dv">3</span>,] <span class="fl">1.0306122</span>    <span class="dv">5</span> <span class="fl">0.2155826</span> <span class="fl">0.009447152</span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>[<span class="dv">4</span>,] <span class="fl">1.2244898</span>    <span class="dv">4</span> <span class="fl">0.2052468</span> <span class="fl">0.013659195</span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a>[<span class="dv">5</span>,] <span class="fl">1.2632653</span>    <span class="dv">3</span> <span class="fl">0.2399562</span> <span class="fl">0.014592443</span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="sc">$</span>zcut</span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">0.1</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="sc">$</span>zcut.conserve</span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">1.22449</span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="sc">$</span>zcut.liberal</span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a>[<span class="dv">1</span>] <span class="fl">0.1</span></span></code></pre></div>
+<p>In the above output, lines for <code>$imp</code> display the final
+list of variables that minimize out-of-sample error rate of a Random
+Forest, where the error rates were listed in lines for
+<code>$error</code>. Its cutoff value for the VarPro standardized
+importance is listed in lines for <code>$zcut</code>. Lines for
+<code>$imp.conserve</code> and <code>$imp.liberal</code> display a
 “conservative” and “liberal” list of variables returned using a one
 standard deviation rule. The conservative list comprises variables using
 the largest cutoff with error rate within one standard deviation from
 the optimal cutoff error rate, whereas the liberal list uses the
 smallest cutoff value with error rate within one standard deviation of
 the optimal cutoff error rate. The variables in the “conservative” list
-are displayed in lines 5-8 with its cutoff value listed in lines 19-20,
-while the variables in the “liberal” list are displayed in lines 9-12
-with its cutoff value listed in lines 21-22.</p>
+are displayed in lines for <code>$imp.conserve</code> with its cutoff
+value listed in <code>$zcut.conserve</code>, while the variables in the
+“liberal” list are displayed in lines for <code>$imp.liberal</code> with
+its cutoff value listed in <code>$zcut.liberal</code>.</p>
 </div>
 </div>
 </div>
@@ -662,194 +679,407 @@ unsupervised problems<a class="anchor" aria-label="anchor" href="#more-examples-
 <div class="section level3">
 <h3 id="regression-with-hot-encoding">Regression with hot-encoding<a class="anchor" aria-label="anchor" href="#regression-with-hot-encoding"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## load the data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">BostonHousing</span>, package <span class="op">=</span> <span class="st">"mlbench"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## convert some of the features to factors</span></span>
-<span><span class="va">Boston</span> <span class="op">&lt;-</span> <span class="va">BostonHousing</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">zn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Boston</span><span class="op">$</span><span class="va">zn</span><span class="op">)</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">chas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Boston</span><span class="op">$</span><span class="va">chas</span><span class="op">)</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">lstat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0.2</span> <span class="op">*</span> <span class="va">Boston</span><span class="op">$</span><span class="va">lstat</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">nox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">20</span> <span class="op">*</span> <span class="va">Boston</span><span class="op">$</span><span class="va">nox</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">rm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">Boston</span><span class="op">$</span><span class="va">rm</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## call varpro and print the importance</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>, <span class="va">Boston</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## get top variables</span></span>
-<span><span class="fu"><a href="../reference/importance.varpro.html">get.topvars</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## map importance values back to original features</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">get.orgvimp</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## same as above ... but for all variables</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">get.orgvimp</a></span><span class="op">(</span><span class="va">o</span>, pretty <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="do">## load the data</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">data</span>(BostonHousing, <span class="at">package =</span> <span class="st">"mlbench"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">head</span>(BostonHousing)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>     crim zn indus chas   nox    rm  age    dis rad tax ptratio      b lstat medv</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="dv">1</span> <span class="fl">0.00632</span> <span class="dv">18</span>  <span class="fl">2.31</span>    <span class="dv">0</span> <span class="fl">0.538</span> <span class="fl">6.575</span> <span class="fl">65.2</span> <span class="fl">4.0900</span>   <span class="dv">1</span> <span class="dv">296</span>    <span class="fl">15.3</span> <span class="fl">396.90</span>  <span class="fl">4.98</span> <span class="fl">24.0</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="dv">2</span> <span class="fl">0.02731</span>  <span class="dv">0</span>  <span class="fl">7.07</span>    <span class="dv">0</span> <span class="fl">0.469</span> <span class="fl">6.421</span> <span class="fl">78.9</span> <span class="fl">4.9671</span>   <span class="dv">2</span> <span class="dv">242</span>    <span class="fl">17.8</span> <span class="fl">396.90</span>  <span class="fl">9.14</span> <span class="fl">21.6</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="dv">3</span> <span class="fl">0.02729</span>  <span class="dv">0</span>  <span class="fl">7.07</span>    <span class="dv">0</span> <span class="fl">0.469</span> <span class="fl">7.185</span> <span class="fl">61.1</span> <span class="fl">4.9671</span>   <span class="dv">2</span> <span class="dv">242</span>    <span class="fl">17.8</span> <span class="fl">392.83</span>  <span class="fl">4.03</span> <span class="fl">34.7</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="dv">4</span> <span class="fl">0.03237</span>  <span class="dv">0</span>  <span class="fl">2.18</span>    <span class="dv">0</span> <span class="fl">0.458</span> <span class="fl">6.998</span> <span class="fl">45.8</span> <span class="fl">6.0622</span>   <span class="dv">3</span> <span class="dv">222</span>    <span class="fl">18.7</span> <span class="fl">394.63</span>  <span class="fl">2.94</span> <span class="fl">33.4</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="dv">5</span> <span class="fl">0.06905</span>  <span class="dv">0</span>  <span class="fl">2.18</span>    <span class="dv">0</span> <span class="fl">0.458</span> <span class="fl">7.147</span> <span class="fl">54.2</span> <span class="fl">6.0622</span>   <span class="dv">3</span> <span class="dv">222</span>    <span class="fl">18.7</span> <span class="fl">396.90</span>  <span class="fl">5.33</span> <span class="fl">36.2</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="dv">6</span> <span class="fl">0.02985</span>  <span class="dv">0</span>  <span class="fl">2.18</span>    <span class="dv">0</span> <span class="fl">0.458</span> <span class="fl">6.430</span> <span class="fl">58.7</span> <span class="fl">6.0622</span>   <span class="dv">3</span> <span class="dv">222</span>    <span class="fl">18.7</span> <span class="fl">394.12</span>  <span class="fl">5.21</span> <span class="fl">28.7</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="do">## convert some of the features to factors</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>Boston <span class="ot">&lt;-</span> BostonHousing</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>Boston<span class="sc">$</span>zn <span class="ot">&lt;-</span> <span class="fu">factor</span>(Boston<span class="sc">$</span>zn)</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>Boston<span class="sc">$</span>chas <span class="ot">&lt;-</span> <span class="fu">factor</span>(Boston<span class="sc">$</span>chas)</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>Boston<span class="sc">$</span>lstat <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">round</span>(<span class="fl">0.2</span> <span class="sc">*</span> Boston<span class="sc">$</span>lstat))</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>Boston<span class="sc">$</span>nox <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">round</span>(<span class="dv">20</span> <span class="sc">*</span> Boston<span class="sc">$</span>nox))</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>Boston<span class="sc">$</span>rm <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">round</span>(Boston<span class="sc">$</span>rm))</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="do">## call varpro and print the importance</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(o <span class="ot">&lt;-</span> <span class="fu">varpro</span>(medv<span class="sc">~</span>., Boston)))</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>              mean std          z</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>rm8     <span class="fl">5.50674473</span>   <span class="dv">1</span> <span class="fl">5.50674473</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>rm6     <span class="fl">2.83521631</span>   <span class="dv">1</span> <span class="fl">2.83521631</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>lstat1  <span class="fl">2.83336677</span>   <span class="dv">1</span> <span class="fl">2.83336677</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>lstat2  <span class="fl">1.94756929</span>   <span class="dv">1</span> <span class="fl">1.94756929</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>crim    <span class="fl">1.87449364</span>   <span class="dv">1</span> <span class="fl">1.87449364</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>nox14   <span class="fl">1.85574193</span>   <span class="dv">1</span> <span class="fl">1.85574193</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>rm7     <span class="fl">1.71973745</span>   <span class="dv">1</span> <span class="fl">1.71973745</span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>ptratio <span class="fl">1.45199619</span>   <span class="dv">1</span> <span class="fl">1.45199619</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>nox13   <span class="fl">1.21876532</span>   <span class="dv">1</span> <span class="fl">1.21876532</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>tax     <span class="fl">1.04384748</span>   <span class="dv">1</span> <span class="fl">1.04384748</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>dis     <span class="fl">1.01647878</span>   <span class="dv">1</span> <span class="fl">1.01647878</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>b       <span class="fl">0.96017408</span>   <span class="dv">1</span> <span class="fl">0.96017408</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a>indus   <span class="fl">0.67175148</span>   <span class="dv">1</span> <span class="fl">0.67175148</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>age     <span class="fl">0.56261903</span>   <span class="dv">1</span> <span class="fl">0.56261903</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a>lstat5  <span class="fl">0.39943921</span>   <span class="dv">1</span> <span class="fl">0.39943921</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a>lstat0  <span class="fl">0.14082527</span>   <span class="dv">1</span> <span class="fl">0.14082527</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a>nox10   <span class="fl">0.13202396</span>   <span class="dv">1</span> <span class="fl">0.13202396</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a>lstat4  <span class="fl">0.11588913</span>   <span class="dv">1</span> <span class="fl">0.11588913</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a>lstat6  <span class="fl">0.02059779</span>   <span class="dv">1</span> <span class="fl">0.02059779</span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a>chas    <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a>nox11   <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a>nox12   <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>nox17   <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a>rad     <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a>rm9     <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a>zn90    <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a><span class="do">## get top variables</span></span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a><span class="fu">get.topvars</span>(o)</span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a> [<span class="dv">1</span>] <span class="st">"rm8"</span>     <span class="st">"rm6"</span>     <span class="st">"lstat1"</span>  <span class="st">"nox14"</span>   <span class="st">"crim"</span>    <span class="st">"lstat2"</span>  <span class="st">"rm7"</span>     <span class="st">"ptratio"</span> <span class="st">"nox13"</span>  </span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>[<span class="dv">10</span>] <span class="st">"tax"</span>     <span class="st">"dis"</span>     <span class="st">"b"</span>       <span class="st">"indus"</span>   <span class="st">"age"</span>     <span class="st">"lstat5"</span>  <span class="st">"lstat0"</span>  <span class="st">"nox10"</span>   <span class="st">"lstat4"</span> </span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a>[<span class="dv">19</span>] <span class="st">"lstat6"</span>  <span class="st">"chas"</span>    <span class="st">"nox11"</span>   <span class="st">"nox12"</span>   <span class="st">"nox17"</span>   <span class="st">"rad"</span>     <span class="st">"rm9"</span>     <span class="st">"zn90"</span>  </span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a></span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a><span class="do">## map importance values back to original features</span></span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">get.orgvimp</span>(o))</span>
+<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a>   variable         z</span>
+<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a><span class="dv">6</span>        rm <span class="fl">5.6510677</span></span>
+<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a><span class="dv">13</span>    lstat <span class="fl">2.7972237</span></span>
+<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a><span class="dv">1</span>      crim <span class="fl">1.9039956</span></span>
+<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a><span class="dv">5</span>       nox <span class="fl">1.9037143</span></span>
+<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a><span class="dv">11</span>  ptratio <span class="fl">1.3992573</span></span>
+<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a><span class="dv">8</span>       dis <span class="fl">1.0730536</span></span>
+<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a><span class="dv">10</span>      tax <span class="fl">0.9785192</span></span>
+<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a><span class="dv">12</span>        b <span class="fl">0.9309314</span></span>
+<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a><span class="dv">3</span>     indus <span class="fl">0.7501651</span></span>
+<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a><span class="dv">7</span>       age <span class="fl">0.4811742</span></span>
+<span id="cb4-70"><a href="#cb4-70" tabindex="-1"></a><span class="dv">2</span>        zn <span class="fl">0.0000000</span></span>
+<span id="cb4-71"><a href="#cb4-71" tabindex="-1"></a><span class="dv">4</span>      chas <span class="fl">0.0000000</span></span>
+<span id="cb4-72"><a href="#cb4-72" tabindex="-1"></a><span class="dv">9</span>       rad <span class="fl">0.0000000</span></span>
+<span id="cb4-73"><a href="#cb4-73" tabindex="-1"></a></span>
+<span id="cb4-74"><a href="#cb4-74" tabindex="-1"></a><span class="do">## same as above ... but for all variables</span></span>
+<span id="cb4-75"><a href="#cb4-75" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">get.orgvimp</span>(o, <span class="at">pretty =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb4-76"><a href="#cb4-76" tabindex="-1"></a>     crim        zn     indus      chas       nox        rm       age       dis       rad       tax </span>
+<span id="cb4-77"><a href="#cb4-77" tabindex="-1"></a><span class="fl">1.8527969</span> <span class="fl">0.0000000</span> <span class="fl">0.6973291</span> <span class="fl">0.0000000</span> <span class="fl">1.7652739</span> <span class="fl">5.6260698</span> <span class="fl">0.5494061</span> <span class="fl">1.0707970</span> <span class="fl">0.0000000</span> <span class="fl">1.1394922</span> </span>
+<span id="cb4-78"><a href="#cb4-78" tabindex="-1"></a>  ptratio         b     lstat </span>
+<span id="cb4-79"><a href="#cb4-79" tabindex="-1"></a><span class="fl">1.4486139</span> <span class="fl">0.9302271</span> <span class="fl">2.7298017</span> </span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="multivariate-regression">Multivariate regression<a class="anchor" aria-label="anchor" href="#multivariate-regression"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">BostonHousing</span>, package <span class="op">=</span> <span class="st">"mlbench"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## using cbind multivariate formula call</span></span>
-<span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">lstat</span>, <span class="va">nox</span><span class="op">)</span> <span class="op">~</span><span class="va">.</span>, <span class="va">BostonHousing</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## equivalent as using rfsrc multivariate formula call</span></span>
-<span><span class="co"># importance(varpro(Multivar(lstat, nox) ~., BostonHousing))</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">data</span>(BostonHousing, <span class="at">package =</span> <span class="st">"mlbench"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## using cbind multivariate formula call</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="fu">importance</span>(<span class="fu">varpro</span>(<span class="fu">cbind</span>(lstat, nox) <span class="sc">~</span>., BostonHousing))</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>[[<span class="dv">1</span>]]</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>             mean std         z</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>medv    <span class="fl">2.7996450</span>   <span class="dv">1</span> <span class="fl">2.7996450</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>rm      <span class="fl">2.2392168</span>   <span class="dv">1</span> <span class="fl">2.2392168</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>age     <span class="fl">1.4388280</span>   <span class="dv">1</span> <span class="fl">1.4388280</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>indus   <span class="fl">1.4148451</span>   <span class="dv">1</span> <span class="fl">1.4148451</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>dis     <span class="fl">1.1423466</span>   <span class="dv">1</span> <span class="fl">1.1423466</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>crim    <span class="fl">0.8824557</span>   <span class="dv">1</span> <span class="fl">0.8824557</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>tax     <span class="fl">0.1418225</span>   <span class="dv">1</span> <span class="fl">0.1418225</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>chas    <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>ptratio <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>rad     <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>zn      <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>[[<span class="dv">2</span>]]</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>             mean std         z</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>indus   <span class="fl">3.6966601</span>   <span class="dv">1</span> <span class="fl">3.6966601</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>dis     <span class="fl">3.0235390</span>   <span class="dv">1</span> <span class="fl">3.0235390</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a>crim    <span class="fl">1.8253159</span>   <span class="dv">1</span> <span class="fl">1.8253159</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a>age     <span class="fl">1.7093763</span>   <span class="dv">1</span> <span class="fl">1.7093763</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a>medv    <span class="fl">1.2941384</span>   <span class="dv">1</span> <span class="fl">1.2941384</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a>rm      <span class="fl">0.9920477</span>   <span class="dv">1</span> <span class="fl">0.9920477</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a>tax     <span class="fl">0.4448525</span>   <span class="dv">1</span> <span class="fl">0.4448525</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a>chas    <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a>ptratio <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a>rad     <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a>zn      <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="do">## equivalent as using rfsrc multivariate formula call</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co"># importance(varpro(Multivar(lstat, nox) ~., BostonHousing))</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="classification">Classification<a class="anchor" aria-label="anchor" href="#classification"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## apply varpro to the iris data</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">iris</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## call the importance function and print the results</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># use the iris data as an example. Check the data:</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">head</span>(iris)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="dv">1</span>          <span class="fl">5.1</span>         <span class="fl">3.5</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span>  setosa</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="dv">2</span>          <span class="fl">4.9</span>         <span class="fl">3.0</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span>  setosa</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="dv">3</span>          <span class="fl">4.7</span>         <span class="fl">3.2</span>          <span class="fl">1.3</span>         <span class="fl">0.2</span>  setosa</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="dv">4</span>          <span class="fl">4.6</span>         <span class="fl">3.1</span>          <span class="fl">1.5</span>         <span class="fl">0.2</span>  setosa</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="dv">5</span>          <span class="fl">5.0</span>         <span class="fl">3.6</span>          <span class="fl">1.4</span>         <span class="fl">0.2</span>  setosa</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="dv">6</span>          <span class="fl">5.4</span>         <span class="fl">3.9</span>          <span class="fl">1.7</span>         <span class="fl">0.4</span>  setosa</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="do">## apply varpro to the iris data</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">varpro</span>(Species <span class="sc">~</span> ., iris)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="do">## call the importance function and print the results</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(o))</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="sc">$</span>unconditional</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>                 mean std        z</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>Petal.Length <span class="fl">3.418289</span>   <span class="dv">1</span> <span class="fl">3.418289</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>Petal.Width  <span class="fl">3.134946</span>   <span class="dv">1</span> <span class="fl">3.134946</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>Sepal.Width  <span class="fl">0.000000</span>   <span class="dv">1</span> <span class="fl">0.000000</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="sc">$</span>conditional.z</span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>                setosa versicolor virginica</span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>Petal.Length <span class="fl">0.1583484</span>   <span class="fl">7.245314</span>  <span class="fl">2.986268</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>Petal.Width  <span class="fl">2.8950007</span>   <span class="fl">6.032885</span>  <span class="fl">4.181791</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a>Sepal.Width  <span class="fl">0.0000000</span>   <span class="fl">0.000000</span>  <span class="fl">0.000000</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="survival">Survival<a class="anchor" aria-label="anchor" href="#survival"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">data</span>(pbc, <span class="at">package =</span> <span class="st">"randomForestSRC"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">head</span>(pbc)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  days status treatment   age sex ascites hepatom spiders edema bili chol albumin copper    alk   sgot</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="dv">1</span>  <span class="dv">400</span>      <span class="dv">1</span>         <span class="dv">1</span> <span class="dv">21464</span>   <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>   <span class="fl">1.0</span> <span class="fl">14.5</span>  <span class="dv">261</span>    <span class="fl">2.60</span>    <span class="dv">156</span> <span class="fl">1718.0</span> <span class="fl">137.95</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="dv">2</span> <span class="dv">4500</span>      <span class="dv">0</span>         <span class="dv">1</span> <span class="dv">20617</span>   <span class="dv">1</span>       <span class="dv">0</span>       <span class="dv">1</span>       <span class="dv">1</span>   <span class="fl">0.0</span>  <span class="fl">1.1</span>  <span class="dv">302</span>    <span class="fl">4.14</span>     <span class="dv">54</span> <span class="fl">7394.8</span> <span class="fl">113.52</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="dv">3</span> <span class="dv">1012</span>      <span class="dv">1</span>         <span class="dv">1</span> <span class="dv">25594</span>   <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>       <span class="dv">0</span>   <span class="fl">0.5</span>  <span class="fl">1.4</span>  <span class="dv">176</span>    <span class="fl">3.48</span>    <span class="dv">210</span>  <span class="fl">516.0</span>  <span class="fl">96.10</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="dv">4</span> <span class="dv">1925</span>      <span class="dv">1</span>         <span class="dv">1</span> <span class="dv">19994</span>   <span class="dv">1</span>       <span class="dv">0</span>       <span class="dv">1</span>       <span class="dv">1</span>   <span class="fl">0.5</span>  <span class="fl">1.8</span>  <span class="dv">244</span>    <span class="fl">2.54</span>     <span class="dv">64</span> <span class="fl">6121.8</span>  <span class="fl">60.63</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="dv">5</span> <span class="dv">1504</span>      <span class="dv">0</span>         <span class="dv">2</span> <span class="dv">13918</span>   <span class="dv">1</span>       <span class="dv">0</span>       <span class="dv">1</span>       <span class="dv">1</span>   <span class="fl">0.0</span>  <span class="fl">3.4</span>  <span class="dv">279</span>    <span class="fl">3.53</span>    <span class="dv">143</span>  <span class="fl">671.0</span> <span class="fl">113.15</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="dv">6</span> <span class="dv">2503</span>      <span class="dv">1</span>         <span class="dv">2</span> <span class="dv">24201</span>   <span class="dv">1</span>       <span class="dv">0</span>       <span class="dv">1</span>       <span class="dv">0</span>   <span class="fl">0.0</span>  <span class="fl">0.8</span>  <span class="dv">248</span>    <span class="fl">3.98</span>     <span class="dv">50</span>  <span class="fl">944.0</span>  <span class="fl">93.00</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  trig platelet prothrombin stage</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="dv">1</span>  <span class="dv">172</span>      <span class="dv">190</span>        <span class="fl">12.2</span>     <span class="dv">4</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="dv">2</span>   <span class="dv">88</span>      <span class="dv">221</span>        <span class="fl">10.6</span>     <span class="dv">3</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="dv">3</span>   <span class="dv">55</span>      <span class="dv">151</span>        <span class="fl">12.0</span>     <span class="dv">4</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="dv">4</span>   <span class="dv">92</span>      <span class="dv">183</span>        <span class="fl">10.3</span>     <span class="dv">4</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="dv">5</span>   <span class="dv">72</span>      <span class="dv">136</span>        <span class="fl">10.9</span>     <span class="dv">3</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="dv">6</span>   <span class="dv">63</span>       <span class="cn">NA</span>        <span class="fl">11.0</span>     <span class="dv">3</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">varpro</span>(<span class="fu">Surv</span>(days, status)<span class="sc">~</span>., pbc)</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(o))</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>                  mean std          z</span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>bili        <span class="fl">2.46339174</span>   <span class="dv">1</span> <span class="fl">2.46339174</span></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>copper      <span class="fl">1.18691683</span>   <span class="dv">1</span> <span class="fl">1.18691683</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>edema       <span class="fl">1.16571084</span>   <span class="dv">1</span> <span class="fl">1.16571084</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>albumin     <span class="fl">1.04664052</span>   <span class="dv">1</span> <span class="fl">1.04664052</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>age         <span class="fl">1.01468875</span>   <span class="dv">1</span> <span class="fl">1.01468875</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>ascites     <span class="fl">0.99235694</span>   <span class="dv">1</span> <span class="fl">0.99235694</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a>prothrombin <span class="fl">0.87894005</span>   <span class="dv">1</span> <span class="fl">0.87894005</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a>stage       <span class="fl">0.40255628</span>   <span class="dv">1</span> <span class="fl">0.40255628</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a>sgot        <span class="fl">0.06715491</span>   <span class="dv">1</span> <span class="fl">0.06715491</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a>chol        <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a>hepatom     <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span></code></pre></div>
 <p>See more <a href="survival.html">survival problems</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="unsupervised-clustering">Unsupervised clustering<a class="anchor" aria-label="anchor" href="#unsupervised-clustering"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">BostonHousing</span>, package <span class="op">=</span> <span class="st">"mlbench"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## default call</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unsupv.varpro.html">unsupv</a></span><span class="op">(</span><span class="va">BostonHousing</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">data</span>(BostonHousing, <span class="at">package =</span> <span class="st">"mlbench"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">## default call</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">unsupv</span>(BostonHousing)</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(o))</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>             mean       std         z</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>indus   <span class="fl">0.5889298</span> <span class="fl">0.3465154</span> <span class="fl">1.6995778</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>nox     <span class="fl">0.5324178</span> <span class="fl">0.3993524</span> <span class="fl">1.3332031</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>medv    <span class="fl">0.4519824</span> <span class="fl">0.4315267</span> <span class="fl">1.0474030</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>tax     <span class="fl">0.3339766</span> <span class="fl">0.3590255</span> <span class="fl">0.9302308</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>rad     <span class="fl">0.3264583</span> <span class="fl">0.3538616</span> <span class="fl">0.9225594</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>zn      <span class="fl">0.3686787</span> <span class="fl">0.4057892</span> <span class="fl">0.9085474</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>crim    <span class="fl">0.3380561</span> <span class="fl">0.4019666</span> <span class="fl">0.8410055</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>lstat   <span class="fl">0.3248712</span> <span class="fl">0.4206612</span> <span class="fl">0.7722872</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>dis     <span class="fl">0.2526544</span> <span class="fl">0.3832465</span> <span class="fl">0.6592476</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>ptratio <span class="fl">0.1881419</span> <span class="fl">0.3276218</span> <span class="fl">0.5742654</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>age     <span class="fl">0.1946974</span> <span class="fl">0.3572511</span> <span class="fl">0.5449876</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>rm      <span class="fl">0.1481955</span> <span class="fl">0.3230311</span> <span class="fl">0.4587656</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>b       <span class="fl">0.0000000</span> <span class="fl">0.0000000</span>       <span class="cn">NaN</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>chas    <span class="fl">0.0000000</span> <span class="fl">0.0000000</span>       <span class="cn">NaN</span></span></code></pre></div>
 <p>See more <a href="unsupervise.html">unsupervised problems</a>.</p>
 </div>
-<div class="section level3">
-<h3 id="regression-example-with-hot-encoding">Regression example with hot-encoding<a class="anchor" aria-label="anchor" href="#regression-example-with-hot-encoding"></a>
-</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("devtools") </span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"kogalur/varPro"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># another way</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"varPro"</span>, repos <span class="op">=</span> <span class="st">"https://cran.us.r-project.org"</span><span class="op">)</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
-<h2 id="split-weights-for-generating-rules">Split-weights for generating rules<a class="anchor" aria-label="anchor" href="#split-weights-for-generating-rules"></a>
+<h2 id="different-split-weight-methods">Different split-weight methods<a class="anchor" aria-label="anchor" href="#different-split-weight-methods"></a>
 </h2>
-<div class="section level3">
-<h3 id="different-split-weight-methods">Different split-weight methods<a class="anchor" aria-label="anchor" href="#different-split-weight-methods"></a>
-</h3>
 <p>We can use different split-weight methods:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## ----------------------------------------------------------------------</span></span>
-<span><span class="co">## high dimensional survival example using different split-weight methods</span></span>
-<span><span class="co">## ----------------------------------------------------------------------</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vdv</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## lasso only</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## lasso and vimp</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso vimp"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## lasso, vimp and shallow trees</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso vimp tree"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="customized-split-weights">Customized split-weights<a class="anchor" aria-label="anchor" href="#customized-split-weights"></a>
-</h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## load the data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">BostonHousing</span>, package <span class="op">=</span> <span class="st">"mlbench"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## make some features into factors</span></span>
-<span><span class="va">Boston</span> <span class="op">&lt;-</span> <span class="va">BostonHousing</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">zn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Boston</span><span class="op">$</span><span class="va">zn</span><span class="op">)</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">chas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">Boston</span><span class="op">$</span><span class="va">chas</span><span class="op">)</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">lstat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0.2</span> <span class="op">*</span> <span class="va">Boston</span><span class="op">$</span><span class="va">lstat</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">nox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">20</span> <span class="op">*</span> <span class="va">Boston</span><span class="op">$</span><span class="va">nox</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">Boston</span><span class="op">$</span><span class="va">rm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">Boston</span><span class="op">$</span><span class="va">rm</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## get default custom split-weights: a named real vector</span></span>
-<span><span class="va">swt</span> <span class="op">&lt;-</span> <span class="fu">varPro</span><span class="fu">:::</span><span class="fu">get.splitweight.custom</span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>,<span class="va">Boston</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## define custom splits weight</span></span>
-<span><span class="va">swt</span> <span class="op">&lt;-</span> <span class="va">swt</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"crim"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span><span class="op">)</span> <span class="op">|</span></span>
-<span>           <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"zn"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span><span class="op">)</span> <span class="op">|</span></span>
-<span>           <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"nox"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span><span class="op">)</span> <span class="op">|</span></span>
-<span>           <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"rm"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span><span class="op">)</span> <span class="op">|</span></span>
-<span>           <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"lstat"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
-<span>           </span>
-<span><span class="va">swt</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"nox"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">4</span></span>
-<span><span class="va">swt</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"lstat"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">4</span></span>
-<span></span>
-<span><span class="va">swt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">swt</span>, strange<span class="op">=</span><span class="fl">99999</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"custom split-weight\n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span></span>
-<span>  </span>
-<span><span class="co">## call varpro with the custom split-weights</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>,<span class="va">Boston</span>,split.weight.custom<span class="op">=</span><span class="va">swt</span>,verbose<span class="op">=</span><span class="cn">TRUE</span>,sparse<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"varpro result\n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">## ----------------------------------------------------------------------</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">## high dimensional survival example using different split-weight methods</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="do">## ----------------------------------------------------------------------</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="fu">data</span>(vdv, <span class="at">package =</span> <span class="st">"randomForestSRC"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>vdv[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">17</span>]</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>   Time Censoring AA555029_RC AA598803_RC     AB002301   AB002308   AB002331  AB002351    AB002445</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="dv">1</span> <span class="fl">12.53</span>         <span class="dv">0</span>  <span class="sc">-</span><span class="fl">0.5049331</span>  <span class="sc">-</span><span class="fl">0.2425008</span> <span class="sc">-</span><span class="fl">0.199315682</span> <span class="fl">0.90024251</span>  <span class="fl">0.6311663</span> <span class="sc">-</span><span class="fl">0.601269</span>  <span class="fl">0.44181645</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="dv">2</span>  <span class="fl">6.44</span>         <span class="dv">0</span>  <span class="sc">-</span><span class="fl">0.5879813</span>   <span class="fl">0.4384945</span> <span class="sc">-</span><span class="fl">0.621200562</span> <span class="fl">0.09301399</span>  <span class="fl">0.9500715</span> <span class="sc">-</span><span class="fl">1.484902</span>  <span class="fl">0.21924725</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="dv">3</span> <span class="fl">10.66</span>         <span class="dv">0</span>  <span class="sc">-</span><span class="fl">0.3521244</span>  <span class="sc">-</span><span class="fl">0.2258911</span>  <span class="fl">0.006643856</span> <span class="fl">0.13952097</span> <span class="sc">-</span><span class="fl">0.7275022</span> <span class="sc">-</span><span class="fl">1.043085</span> <span class="sc">-</span><span class="fl">0.27572003</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="dv">4</span> <span class="fl">13.00</span>         <span class="dv">0</span>  <span class="sc">-</span><span class="fl">0.4750357</span>   <span class="fl">0.5016111</span> <span class="sc">-</span><span class="fl">0.671029449</span> <span class="fl">0.76404345</span> <span class="sc">-</span><span class="fl">0.9234960</span> <span class="sc">-</span><span class="fl">1.926718</span> <span class="sc">-</span><span class="fl">0.01993157</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="dv">5</span> <span class="fl">11.98</span>         <span class="dv">0</span>  <span class="sc">-</span><span class="fl">0.1660964</span>   <span class="fl">0.1361991</span>  <span class="fl">0.989934564</span> <span class="fl">0.62452251</span>  <span class="fl">0.9168522</span> <span class="sc">-</span><span class="fl">1.455004</span>  <span class="fl">0.07972627</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>     AB002448    AB004064   AB004857   AB006625    AB006628    AB006746    AB007458    AB007855</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span><span class="fl">0.26575425</span> <span class="sc">-</span><span class="fl">2.80370736</span>  <span class="fl">0.1328771</span> <span class="sc">-</span><span class="fl">1.1427432</span> <span class="sc">-</span><span class="fl">0.52818656</span> <span class="sc">-</span><span class="fl">0.97000301</span>  <span class="fl">0.32222703</span>  <span class="fl">0.41856295</span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="dv">2</span>  <span class="fl">0.14616483</span>  <span class="fl">0.08637013</span>  <span class="fl">0.5913032</span>  <span class="fl">1.1859283</span> <span class="sc">-</span><span class="fl">0.70424873</span> <span class="sc">-</span><span class="fl">0.62120056</span>  <span class="fl">0.33883667</span>  <span class="fl">0.05979471</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="dv">3</span> <span class="sc">-</span><span class="fl">0.49496728</span>  <span class="fl">0.56140584</span>  <span class="fl">0.7108926</span>  <span class="fl">1.2424011</span> <span class="sc">-</span><span class="fl">0.77068734</span>  <span class="fl">1.12613368</span> <span class="sc">-</span><span class="fl">0.38534367</span> <span class="sc">-</span><span class="fl">0.23253496</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="dv">4</span>  <span class="fl">0.09301399</span>  <span class="fl">0.41524100</span>  <span class="fl">0.2425008</span> <span class="sc">-</span><span class="fl">0.9002425</span>  <span class="fl">0.07972627</span> <span class="sc">-</span><span class="fl">0.43517259</span>  <span class="fl">0.05315085</span> <span class="sc">-</span><span class="fl">1.56795001</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="dv">5</span>  <span class="fl">0.77733117</span>  <span class="fl">0.19267184</span> <span class="sc">-</span><span class="fl">0.3720559</span> <span class="sc">-</span><span class="fl">0.9700030</span> <span class="sc">-</span><span class="fl">0.41856295</span> <span class="sc">-</span><span class="fl">0.07640435</span> <span class="sc">-</span><span class="fl">0.20263761</span>  <span class="fl">0.54147428</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">Surv</span>(Time, Censoring)<span class="sc">~</span>.)</span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a><span class="do">## lasso only</span></span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(<span class="fu">varpro</span>(f, vdv, <span class="at">split.weight.method =</span> <span class="st">"lasso"</span>)))</span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>                    mean std         z</span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>NM_020974      <span class="fl">1.3467670</span>   <span class="dv">1</span> <span class="fl">1.3467670</span></span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a>Contig28552_RC <span class="fl">1.2559874</span>   <span class="dv">1</span> <span class="fl">1.2559874</span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a>Contig47405_RC <span class="fl">0.6077356</span>   <span class="dv">1</span> <span class="fl">0.6077356</span></span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a></span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="do">## lasso and vimp</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(<span class="fu">varpro</span>(f, vdv, <span class="at">split.weight.method =</span> <span class="st">"lasso vimp"</span>)))</span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a>                    mean std         z</span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a>NM_020974      <span class="fl">1.0046346</span>   <span class="dv">1</span> <span class="fl">1.0046346</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a>Contig28552_RC <span class="fl">0.7811724</span>   <span class="dv">1</span> <span class="fl">0.7811724</span></span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a>U45975         <span class="fl">0.6168962</span>   <span class="dv">1</span> <span class="fl">0.6168962</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a>Contig47405_RC <span class="fl">0.5453620</span>   <span class="dv">1</span> <span class="fl">0.5453620</span></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a>Contig25991    <span class="fl">0.5433835</span>   <span class="dv">1</span> <span class="fl">0.5433835</span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a>AB020689       <span class="fl">0.2539017</span>   <span class="dv">1</span> <span class="fl">0.2539017</span></span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a>Contig43983_RC <span class="fl">0.1881271</span>   <span class="dv">1</span> <span class="fl">0.1881271</span></span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a><span class="do">## lasso, vimp and shallow trees</span></span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(<span class="fu">varpro</span>(f, vdv, <span class="at">split.weight.method =</span> <span class="st">"lasso vimp tree"</span>)))</span>
+<span id="cb9-45"><a href="#cb9-45" tabindex="-1"></a></span>
+<span id="cb9-46"><a href="#cb9-46" tabindex="-1"></a>                    mean std         z</span>
+<span id="cb9-47"><a href="#cb9-47" tabindex="-1"></a>Contig55574_RC <span class="fl">0.8346094</span>   <span class="dv">1</span> <span class="fl">0.8346094</span></span>
+<span id="cb9-48"><a href="#cb9-48" tabindex="-1"></a>NM_020974      <span class="fl">0.8219527</span>   <span class="dv">1</span> <span class="fl">0.8219527</span></span>
+<span id="cb9-49"><a href="#cb9-49" tabindex="-1"></a>NM_006681      <span class="fl">0.7861983</span>   <span class="dv">1</span> <span class="fl">0.7861983</span></span>
+<span id="cb9-50"><a href="#cb9-50" tabindex="-1"></a>Contig47405_RC <span class="fl">0.5285405</span>   <span class="dv">1</span> <span class="fl">0.5285405</span></span>
+<span id="cb9-51"><a href="#cb9-51" tabindex="-1"></a>Contig28552_RC <span class="fl">0.4177255</span>   <span class="dv">1</span> <span class="fl">0.4177255</span></span>
+<span id="cb9-52"><a href="#cb9-52" tabindex="-1"></a>Contig43983_RC <span class="fl">0.2888110</span>   <span class="dv">1</span> <span class="fl">0.2888110</span></span>
+<span id="cb9-53"><a href="#cb9-53" tabindex="-1"></a>Contig25290_RC <span class="fl">0.2025538</span>   <span class="dv">1</span> <span class="fl">0.2025538</span></span>
+<span id="cb9-54"><a href="#cb9-54" tabindex="-1"></a>NM_014181      <span class="fl">0.1108264</span>   <span class="dv">1</span> <span class="fl">0.1108264</span></span>
+<span id="cb9-55"><a href="#cb9-55" tabindex="-1"></a>NM_018964      <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span>
+<span id="cb9-56"><a href="#cb9-56" tabindex="-1"></a>U45975         <span class="fl">0.0000000</span>   <span class="dv">1</span> <span class="fl">0.0000000</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="different-ways-to-improve-speed-for-large-data">Different ways to improve speed for large data<a class="anchor" aria-label="anchor" href="#different-ways-to-improve-speed-for-large-data"></a>
+<h2 id="customized-split-weights">Customized split-weights<a class="anchor" aria-label="anchor" href="#customized-split-weights"></a>
 </h2>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">25000</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">50</span></span>
-<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="va">p</span><span class="op">)</span>, <span class="va">n</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## use large nodesize</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, <span class="va">d</span>, ntree <span class="op">=</span> <span class="fl">100</span>, nodesize <span class="op">=</span> <span class="fl">200</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## use large nodesize, smaller bootstrap </span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, <span class="va">d</span>, ntree <span class="op">=</span> <span class="fl">100</span>, nodesize <span class="op">=</span> <span class="fl">200</span>,</span>
-<span>           sampsize <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The VarPro procedure with cross-validation works similarly:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## roughly impute the data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">housing</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">housing2</span> <span class="op">&lt;-</span> <span class="fu">randomForestSRC</span><span class="fu">:::</span><span class="fu">get.na.roughfix</span><span class="op">(</span><span class="va">housing</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## use bigger nodesize</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/cv.varpro.html">cv.varpro</a></span><span class="op">(</span><span class="va">SalePrice</span><span class="op">~</span><span class="va">.</span>, <span class="va">housing2</span>, fast <span class="op">=</span> <span class="cn">TRUE</span>, ntree <span class="op">=</span> <span class="fl">50</span>, nodesize <span class="op">=</span> <span class="fl">150</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## use smaller bootstrap</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/cv.varpro.html">cv.varpro</a></span><span class="op">(</span><span class="va">SalePrice</span><span class="op">~</span><span class="va">.</span>, <span class="va">housing2</span>, fast <span class="op">=</span> <span class="cn">TRUE</span>, ntree <span class="op">=</span> <span class="fl">50</span>, nodesize <span class="op">=</span> <span class="fl">150</span>, sampsize <span class="op">=</span> <span class="fl">250</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="do">## load the data</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">data</span>(BostonHousing, <span class="at">package =</span> <span class="st">"mlbench"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="do">## make some features into factors</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>Boston <span class="ot">&lt;-</span> BostonHousing</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>Boston<span class="sc">$</span>zn <span class="ot">&lt;-</span> <span class="fu">factor</span>(Boston<span class="sc">$</span>zn)</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>Boston<span class="sc">$</span>chas <span class="ot">&lt;-</span> <span class="fu">factor</span>(Boston<span class="sc">$</span>chas)</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>Boston<span class="sc">$</span>lstat <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">round</span>(<span class="fl">0.2</span> <span class="sc">*</span> Boston<span class="sc">$</span>lstat))</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>Boston<span class="sc">$</span>nox <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">round</span>(<span class="dv">20</span> <span class="sc">*</span> Boston<span class="sc">$</span>nox))</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>Boston<span class="sc">$</span>rm <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">round</span>(Boston<span class="sc">$</span>rm))</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="do">## get default custom split-weights: a named real vector</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>swt <span class="ot">&lt;-</span> varPro<span class="sc">:::</span><span class="fu">get.splitweight.custom</span>(medv<span class="sc">~</span>., Boston)</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>swt</span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>   crim   indus     age     dis     rad     tax ptratio       b     zn0  zn12<span class="fl">.5</span>  zn17<span class="fl">.5</span>    zn18 </span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a>   zn20    zn21    zn22    zn25    zn28    zn30    zn33    zn34    zn35    zn40    zn45  zn52<span class="fl">.5</span> </span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a>   zn55    zn60    zn70    zn75    zn80  zn82<span class="fl">.5</span>    zn85    zn90    zn95   zn100    chas    nox8 </span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>   nox9   nox10   nox11   nox12   nox13   nox14   nox15   nox17     rm4     rm5     rm6     rm7 </span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>    rm8     rm9  lstat0  lstat1  lstat2  lstat3  lstat4  lstat5  lstat6  lstat7  lstat8 </span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="do">## define custom splits weight</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a>swt <span class="ot">&lt;-</span> swt[<span class="fu">grepl</span>(<span class="st">"crim"</span>, <span class="fu">names</span>(swt)) <span class="sc">|</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a>           <span class="fu">grepl</span>(<span class="st">"zn"</span>, <span class="fu">names</span>(swt)) <span class="sc">|</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a>           <span class="fu">grepl</span>(<span class="st">"nox"</span>, <span class="fu">names</span>(swt)) <span class="sc">|</span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a>           <span class="fu">grepl</span>(<span class="st">"rm"</span>, <span class="fu">names</span>(swt)) <span class="sc">|</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a>           <span class="fu">grepl</span>(<span class="st">"lstat"</span>, <span class="fu">names</span>(swt))]</span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a>           </span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a>swt[<span class="fu">grepl</span>(<span class="st">"nox"</span>, <span class="fu">names</span>(swt))] <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a>swt[<span class="fu">grepl</span>(<span class="st">"lstat"</span>, <span class="fu">names</span>(swt))] <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a>swt <span class="ot">&lt;-</span> <span class="fu">c</span>(swt, <span class="at">strange=</span><span class="dv">99999</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"custom split-weight</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="fu">print</span>(swt)</span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a></span>
+<span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a>   crim   indus     age     dis     rad     tax ptratio       b     zn0  zn12<span class="fl">.5</span>  zn17<span class="fl">.5</span>    zn18 </span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span>
+<span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a>   zn20    zn21    zn22    zn25    zn28    zn30    zn33    zn34    zn35    zn40    zn45  zn52<span class="fl">.5</span> </span>
+<span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span>
+<span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a>   zn55    zn60    zn70    zn75    zn80  zn82<span class="fl">.5</span>    zn85    zn90    zn95   zn100    chas    nox8 </span>
+<span id="cb10-46"><a href="#cb10-46" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">4</span> </span>
+<span id="cb10-47"><a href="#cb10-47" tabindex="-1"></a>   nox9   nox10   nox11   nox12   nox13   nox14   nox15   nox17     rm4     rm5     rm6     rm7 </span>
+<span id="cb10-48"><a href="#cb10-48" tabindex="-1"></a>      <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">1</span> </span>
+<span id="cb10-49"><a href="#cb10-49" tabindex="-1"></a>    rm8     rm9  lstat0  lstat1  lstat2  lstat3  lstat4  lstat5  lstat6  lstat7  lstat8 strange </span>
+<span id="cb10-50"><a href="#cb10-50" tabindex="-1"></a>      <span class="dv">1</span>       <span class="dv">1</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>       <span class="dv">4</span>   <span class="dv">99999</span> </span>
+<span id="cb10-51"><a href="#cb10-51" tabindex="-1"></a>      </span>
+<span id="cb10-52"><a href="#cb10-52" tabindex="-1"></a>      </span>
+<span id="cb10-53"><a href="#cb10-53" tabindex="-1"></a>  </span>
+<span id="cb10-54"><a href="#cb10-54" tabindex="-1"></a><span class="do">## call varpro with the custom split-weights</span></span>
+<span id="cb10-55"><a href="#cb10-55" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">varpro</span>(medv<span class="sc">~</span>.,Boston,<span class="at">split.weight.custom=</span>swt,<span class="at">verbose=</span><span class="cn">TRUE</span>,<span class="at">sparse=</span><span class="cn">FALSE</span>)</span>
+<span id="cb10-56"><a href="#cb10-56" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"varpro result</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb10-57"><a href="#cb10-57" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(o))</span>
+<span id="cb10-58"><a href="#cb10-58" tabindex="-1"></a></span>
+<span id="cb10-59"><a href="#cb10-59" tabindex="-1"></a>              mean std          z</span>
+<span id="cb10-60"><a href="#cb10-60" tabindex="-1"></a>lstat1  <span class="fl">3.44547544</span>   <span class="dv">1</span> <span class="fl">3.44547544</span></span>
+<span id="cb10-61"><a href="#cb10-61" tabindex="-1"></a>nox14   <span class="fl">2.14347713</span>   <span class="dv">1</span> <span class="fl">2.14347713</span></span>
+<span id="cb10-62"><a href="#cb10-62" tabindex="-1"></a>lstat2  <span class="fl">2.09828576</span>   <span class="dv">1</span> <span class="fl">2.09828576</span></span>
+<span id="cb10-63"><a href="#cb10-63" tabindex="-1"></a>nox13   <span class="fl">1.84721160</span>   <span class="dv">1</span> <span class="fl">1.84721160</span></span>
+<span id="cb10-64"><a href="#cb10-64" tabindex="-1"></a>lstat3  <span class="fl">1.73094931</span>   <span class="dv">1</span> <span class="fl">1.73094931</span></span>
+<span id="cb10-65"><a href="#cb10-65" tabindex="-1"></a>ptratio <span class="fl">1.46130959</span>   <span class="dv">1</span> <span class="fl">1.46130959</span></span>
+<span id="cb10-66"><a href="#cb10-66" tabindex="-1"></a>crim    <span class="fl">1.44799049</span>   <span class="dv">1</span> <span class="fl">1.44799049</span></span>
+<span id="cb10-67"><a href="#cb10-67" tabindex="-1"></a>tax     <span class="fl">1.17483807</span>   <span class="dv">1</span> <span class="fl">1.17483807</span></span>
+<span id="cb10-68"><a href="#cb10-68" tabindex="-1"></a>dis     <span class="fl">1.14565178</span>   <span class="dv">1</span> <span class="fl">1.14565178</span></span>
+<span id="cb10-69"><a href="#cb10-69" tabindex="-1"></a>indus   <span class="fl">1.03991622</span>   <span class="dv">1</span> <span class="fl">1.03991622</span></span>
+<span id="cb10-70"><a href="#cb10-70" tabindex="-1"></a>age     <span class="fl">0.97325749</span>   <span class="dv">1</span> <span class="fl">0.97325749</span></span>
+<span id="cb10-71"><a href="#cb10-71" tabindex="-1"></a>nox10   <span class="fl">0.93907605</span>   <span class="dv">1</span> <span class="fl">0.93907605</span></span>
+<span id="cb10-72"><a href="#cb10-72" tabindex="-1"></a>rad     <span class="fl">0.89609808</span>   <span class="dv">1</span> <span class="fl">0.89609808</span></span>
+<span id="cb10-73"><a href="#cb10-73" tabindex="-1"></a>b       <span class="fl">0.84742923</span>   <span class="dv">1</span> <span class="fl">0.84742923</span></span>
+<span id="cb10-74"><a href="#cb10-74" tabindex="-1"></a>lstat5  <span class="fl">0.76029629</span>   <span class="dv">1</span> <span class="fl">0.76029629</span></span>
+<span id="cb10-75"><a href="#cb10-75" tabindex="-1"></a>nox12   <span class="fl">0.76028333</span>   <span class="dv">1</span> <span class="fl">0.76028333</span></span>
+<span id="cb10-76"><a href="#cb10-76" tabindex="-1"></a>lstat0  <span class="fl">0.51429886</span>   <span class="dv">1</span> <span class="fl">0.51429886</span></span>
+<span id="cb10-77"><a href="#cb10-77" tabindex="-1"></a>nox11   <span class="fl">0.48412252</span>   <span class="dv">1</span> <span class="fl">0.48412252</span></span>
+<span id="cb10-78"><a href="#cb10-78" tabindex="-1"></a>lstat6  <span class="fl">0.44171876</span>   <span class="dv">1</span> <span class="fl">0.44171876</span></span>
+<span id="cb10-79"><a href="#cb10-79" tabindex="-1"></a>nox17   <span class="fl">0.41459835</span>   <span class="dv">1</span> <span class="fl">0.41459835</span></span>
+<span id="cb10-80"><a href="#cb10-80" tabindex="-1"></a>lstat4  <span class="fl">0.39042797</span>   <span class="dv">1</span> <span class="fl">0.39042797</span></span>
+<span id="cb10-81"><a href="#cb10-81" tabindex="-1"></a>zn0     <span class="fl">0.15636232</span>   <span class="dv">1</span> <span class="fl">0.15636232</span></span>
+<span id="cb10-82"><a href="#cb10-82" tabindex="-1"></a>nox9    <span class="fl">0.15407456</span>   <span class="dv">1</span> <span class="fl">0.15407456</span></span>
+<span id="cb10-83"><a href="#cb10-83" tabindex="-1"></a>nox15   <span class="fl">0.04384960</span>   <span class="dv">1</span> <span class="fl">0.04384960</span></span>
+<span id="cb10-84"><a href="#cb10-84" tabindex="-1"></a>nox8    <span class="fl">0.03129762</span>   <span class="dv">1</span> <span class="fl">0.03129762</span></span>
+<span id="cb10-85"><a href="#cb10-85" tabindex="-1"></a>lstat7  <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
+<span id="cb10-86"><a href="#cb10-86" tabindex="-1"></a>zn12<span class="fl">.5</span>  <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span></code></pre></div>
 <br><br><p class="comment2">
 <strong> Cite this vignette as </strong> <br> M. Lu, A. Shear, U. B.
-Kogalur, and H. Ishwaran. 2024. “varPro: getting started with varPro
-vignette.” <a href="http://varpro.org/articles/getstarted.html" class="external-link uri">http://varpro.org/articles/getstarted.html</a>.
+Kogalur, and H. Ishwaran. 2025. “varPro: getting started with varPro
+vignette.” <a href="http://www.varprotools.org/articles/getstarted.html" class="external-link uri">http://www.varprotools.org/articles/getstarted.html</a>.
 </p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="sc">@</span>misc{HemantGettingStarted,</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>    author <span class="ot">=</span> <span class="st">"Min Lu and Aster Shear and Udaya B. Kogalur and Hemant Ishwaran"</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>    title <span class="ot">=</span> {{varPro}<span class="sc">:</span> getting started with {varPro} vignette},</span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>    year <span class="ot">=</span> {<span class="dv">2024</span>},</span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>    url <span class="ot">=</span> {http<span class="sc">:</span><span class="er">//</span>varpro.org<span class="sc">/</span>articles<span class="sc">/</span>getstarted.html},</span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>    howpublished <span class="ot">=</span> <span class="st">"\url{http://varpro.org/articles/getstarted.html}"</span>,</span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>    note <span class="ot">=</span> <span class="st">"[accessed date]"</span></span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="sc">@</span>misc{HemantGettingStarted,</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>    author <span class="ot">=</span> <span class="st">"Min Lu and Aster Shear and Udaya B. Kogalur and Hemant Ishwaran"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    title <span class="ot">=</span> {{varPro}<span class="sc">:</span> getting started with {varPro} vignette},</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    year <span class="ot">=</span> {<span class="dv">2025</span>},</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    url <span class="ot">=</span> {http<span class="sc">:</span><span class="er">//</span>www.varprotools.org<span class="sc">/</span>articles<span class="sc">/</span>getstarted.html},</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>    howpublished <span class="ot">=</span> <span class="st">"\url{http://www.varprotools.org/articles/getstarted.html}"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>    note <span class="ot">=</span> <span class="st">"[accessed date]"</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>}</span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-HemantRFQv" class="csl-entry">
+1. Ishwaran H, O’Brien R, Lu M, Kogalur UB. <span class="nocase">randomForestSRC</span>: Random forests quantile
+classifier <span>(RFQ)</span> vignette. 2021. <a href="http://randomforestsrc.org/articles/imbalance.html" class="external-link">http://randomforestsrc.org/articles/imbalance.html</a>.
+</div>
+<div id="ref-rfq" class="csl-entry">
+2. O’Brien R, Ishwaran H. A random forests quantile classifier for class
+imbalanced data. Pattern recognition. 2019;90:232–49.
+</div>
+<div id="ref-lu2024model" class="csl-entry">
+3. Lu M, Ishwaran H. Model-independent variable selection via the
+rule-based variable priority. arXiv preprint arXiv:240909003. 2024.
+</div>
+</div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
       </div>
 
 </div>
