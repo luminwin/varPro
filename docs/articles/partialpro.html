@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VarPro for Survival Problems • Model-Independent Variable Selection with Variable Priority</title>
+<title>Partial Effects from VarPro • Model-Independent Variable Selection with Variable Priority</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="VarPro for Survival Problems">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Partial Effects from VarPro">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -124,14 +124,14 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>VarPro for Survival Problems</h1>
+      <h1 data-toc-skip>Partial Effects from VarPro</h1>
                         <h4 data-toc-skip class="author">
 <a href="https://www.luminwin.net/" class="external-link">Min Lu</a> (<a href="mailto:luminwin@gmail.com" class="email">luminwin@gmail.com</a>)
 <br><br> Aster Shear (<a href="mailto:aster.shear@gmail.com" class="email">aster.shear@gmail.com</a>) <br><br> Udaya B. Kogalur (<a href="mailto:ubk@kogalur.com" class="email">ubk@kogalur.com</a>) <br><br><a href="https://ishwaran.org/ishwaran.html" class="external-link">Hemant Ishwaran</a>
 (<a href="mailto:hemant.ishwaran@gmail.com" class="email">hemant.ishwaran@gmail.com</a>)</h4>
             
             <h4 data-toc-skip class="date">2025-04-10</h4>
-      
+
 
     </div>
 
@@ -161,98 +161,117 @@ font-size: 16px;
 }
 </style>
 <img src="data:image/png;base64,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" style="position:absolute; top:140px; right:0; padding:5px;" width="150"><div class="section level2">
-<h2 id="default-call">Default call<a class="anchor" aria-label="anchor" href="#default-call"></a>
+<h2 id="partial-effects-with-partialpro">Partial Effects with partialpro<a class="anchor" aria-label="anchor" href="#partial-effects-with-partialpro"></a>
 </h2>
+<p>The partialpro function allows you to estimate partial effects for
+selected variables based on a prior VarPro analysis.</p>
+<div class="section level3">
+<h3 id="what-are-partial-effects">What Are Partial Effects?<a class="anchor" aria-label="anchor" href="#what-are-partial-effects"></a>
+</h3>
+<p>Partial effects help visualize the marginal relationship between a
+variable and the response, while averaging out the effects of other
+variables. In the context of VarPro: <strong>Only unfiltered
+variables</strong> are eligible. Variables filtered out during the
+VarPro analysis (considered noisy) will not have partial effects
+computed.</p>
+</div>
+<div class="section level3">
+<h3 id="how-it-works">How It Works<a class="anchor" aria-label="anchor" href="#how-it-works"></a>
+</h3>
+<p>Partial effects are estimated using <strong>predicted values from the
+random forest</strong> built during the VarPro run. The process uses a
+refinement technique called <strong>Unlimited Virtual Twins
+(UVT)</strong> to improve robustness.</p>
+<ul>
+<li>
+<strong>UVT restricts predictions</strong> to realistic synthetic
+data points that meet a filtering criterion based on <strong>isolation
+forests</strong>, implemented via the <code><a href="../reference/isopro.varpro.html">isopro()</a></code> function
+(see the <a href="isopro.html">isopro vignette</a>).</li>
+</ul>
+<p>The internal <code>cut</code> option controls the filtering
+sensitivity — a small percentile value used to discard implausible
+partial data.</p>
+</div>
+<div class="section level3">
+<h3 id="response-types">Response Types<a class="anchor" aria-label="anchor" href="#response-types"></a>
+</h3>
+<p>Partial effect estimates depend on the outcome type:</p>
+<ul>
+<li><p>Regression: Partial effects are on the original response
+scale.</p></li>
+<li><p>Survival: Default is <strong>mortality</strong>, but you can
+specify <strong>RMST</strong> (Restricted Mean Survival Time) in the
+original varpro() call.</p></li>
+<li><p>Classification: Partial effects are given as log-odds for the
+specified target class.</p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="estimation-method">Estimation Method<a class="anchor" aria-label="anchor" href="#estimation-method"></a>
+</h3>
+<p>Partial effects are <strong>locally estimated</strong> using
+<strong>polynomial regression models</strong>:</p>
+<ul>
+<li><p>Predicted values from the learner are regressed on the variable
+of interest.</p></li>
+<li><p>The degree of the polynomial is controlled by the df option
+(default is <code>df = 2</code>, corresponding to <strong>a quadratic
+model</strong>).</p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="using-custom-learners">Using Custom Learners<a class="anchor" aria-label="anchor" href="#using-custom-learners"></a>
+</h3>
+<p>By default, the <strong>VarPro forest</strong> is used for
+predictions. However, you can specify a <strong>custom learner</strong>
+via the <code>learner</code> option.</p>
+<ul>
+<li><p>Your learner must be trained on the same training data used for
+the original VarPro analysis.</p></li>
+<li><p>It must be a function that:</p></li>
+<li><p>Takes a data frame of feature values as input</p></li>
+<li>
+<p>Returns:<br></p>
+<ul>
+<li><p>A <strong>vector</strong> of predicted values for regression or
+survival<br></p></li>
+<li><p>A <strong>matrix</strong> of predicted class probabilities
+(columns ordered by original class labels) for classification</p></li>
+</ul>
+</li>
+<li><p>If input is NULL, it should return predictions for the
+<strong>original training data</strong></p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="r-examples">R Examples<a class="anchor" aria-label="anchor" href="#r-examples"></a>
+</h3>
+<p>Using an external random forest learner</p>
+<p>Using gradient tree boosting</p>
+<p>Using Bayesian Adaptive Regression Trees (BART)</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="co">## survival example: pbc </span></span>
-<span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="survival-with-rmst-restricted-mean-survival-time">Survival with RMST (restricted mean survival time)<a class="anchor" aria-label="anchor" href="#survival-with-rmst-restricted-mean-survival-time"></a>
-</h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="co">## pbc survival with rmst (restricted mean survival time)</span></span>
-<span><span class="co">## functional of interest is RMST at 500 days</span></span>
-<span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span>, rmst <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="survival-with-a-rmst-vector">Survival with a RMST vector<a class="anchor" aria-label="anchor" href="#survival-with-a-rmst-vector"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="co">## pbc survival with rmst vector</span></span>
-<span><span class="co">## variable importance is a list for each rmst value</span></span>
-<span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span>, rmst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="high-dimensional-survival-data">High dimensional survival data<a class="anchor" aria-label="anchor" href="#high-dimensional-survival-data"></a>
-</h2>
-<p>Our algorithm automatically implement sparse option for high
-dimensional problems.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vdv</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">vdv</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>To turn off the sparse option, you can use the argument
-<code>sparse = FALSE</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="co">## high dimensional survival example without sparse option</span></span>
-<span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vdv</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">vdv</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We can use different split-weight methods:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## ----------------------------------------------------------------------</span></span>
-<span><span class="co">## high dimensional survival example using different split-weight methods</span></span>
-<span><span class="co">## ----------------------------------------------------------------------</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vdv</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools") </span></span>
+<span><span class="co"># ensure to obtain the newest version of ‘randomForestSRC’</span></span>
+<span><span class="co"># devtools::install_github("kogalur/randomForestSRC")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"kogalur/varPro"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## lasso only</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## lasso and vimp</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso vimp"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## lasso, vimp and shallow trees</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso vimp tree"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="external-outcome-for-interpreting-external-models">External outcome for interpreting external models<a class="anchor" aria-label="anchor" href="#external-outcome-for-interpreting-external-models"></a>
-</h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/varpro.html">varpro</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## using  external rsf predictor as an example</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span>,y.external<span class="op">=</span><span class="fu">randomForestSRC</span><span class="fu">::</span><span class="fu"><a href="https://www.randomforestsrc.org//reference/rfsrc.html">rfsrc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span><span class="op">$</span><span class="va">predicted.oob</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># another way</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"varPro"</span>, repos <span class="op">=</span> <span class="st">"https://cran.us.r-project.org"</span><span class="op">)</span></span></code></pre></div>
 <br><br><p class="comment2">
 <strong> Cite this vignette as </strong> <br> M. Lu, A. Shear, U. B.
-Kogalur, and H. Ishwaran. 2025. “varPro: variable selection for survival
-problems vignette.” <a href="http://www.varprotools.org/articles/survival.html" class="external-link uri">http://www.varprotools.org/articles/survival.html</a>.
+Kogalur, and H. Ishwaran. 2025. “partialPro: partial effects from a
+VarPro analysis vignette.” <a href="http://www.varprotools.org/articles/partialpro.html" class="external-link uri">http://www.varprotools.org/articles/partialpro.html</a>.
 </p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="sc">@</span>misc{HemantInstall,</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>    author <span class="ot">=</span> <span class="st">"Min Lu and Aster Shear and Udaya B. Kogalur and Hemant Ishwaran"</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    title <span class="ot">=</span> {{varPro}<span class="sc">:</span> variable selection <span class="cf">for</span> survival problems vignette},</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>    year <span class="ot">=</span> {<span class="dv">2024</span>},</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    url <span class="ot">=</span> {http<span class="sc">:</span><span class="er">//</span>www.varprotools.org<span class="sc">/</span>articles<span class="sc">/</span>survival.html},</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    howpublished <span class="ot">=</span> <span class="st">"\url{http://www.varprotools.org/articles/survival.html}"</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    note <span class="ot">=</span> <span class="st">"[accessed date]"</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="sc">@</span>misc{HemantInstall,</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>    author <span class="ot">=</span> <span class="st">"Min Lu and Aster Shear and Udaya B. Kogalur and Hemant Ishwaran"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>    title <span class="ot">=</span> {{partialPro}<span class="sc">:</span> partial effects from a VarPro analysis vignette},</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    year <span class="ot">=</span> {<span class="dv">2025</span>},</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>    url <span class="ot">=</span> {http<span class="sc">:</span><span class="er">//</span>www.varprotools.org<span class="sc">/</span>articles<span class="sc">/</span>partialpro.html},</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>    howpublished <span class="ot">=</span> <span class="st">"\url{http://www.varprotools.org/articles/partialpro.html}"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>    note <span class="ot">=</span> <span class="st">"[accessed date]"</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>}</span></code></pre></div>
+</div>
 </div>
   </div>
 

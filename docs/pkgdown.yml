@@ -4,9 +4,13 @@ pkgdown_sha: ~
 articles:
   getstarted: getstarted.html
   installation: installation.html
+  isopro: isopro.html
+  ivarpro: ivarpro.html
+  partialpro: partialpro.html
+  speedup: speedup.html
   survival: survival.html
   unsupervise: unsupervise.html
-last_built: 2025-04-09T07:22Z
+last_built: 2025-04-10T09:58Z
 urls:
   reference: https://www.randomforestsrc.org/reference
   article: https://www.randomforestsrc.org/articles
