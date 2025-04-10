@@ -124,7 +124,7 @@ survival and unsupervised</h1>
 <br><br> Aster Shear (<a href="mailto:aster.shear@gmail.com" class="email">aster.shear@gmail.com</a>) <br><br> Udaya B. Kogalur (<a href="mailto:ubk@kogalur.com" class="email">ubk@kogalur.com</a>) <br><br><a href="https://ishwaran.org/ishwaran.html" class="external-link">Hemant Ishwaran</a>
 (<a href="mailto:hemant.ishwaran@gmail.com" class="email">hemant.ishwaran@gmail.com</a>)</h4>
             
-            <h4 data-toc-skip class="date">2025-04-09</h4>
+            <h4 data-toc-skip class="date">2025-04-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/kogalur/varPro/blob/HEAD/vignettes/getstarted.Rmd" class="external-link"><code>vignettes/getstarted.Rmd</code></a></small>
       <div class="hidden name"><code>getstarted.Rmd</code></div>
@@ -440,10 +440,6 @@ of the existing data rather than creating new data, VarPro provides a
 robust and flexible framework for measuring variable importance. Like
 VIMP and knockoffs, VarPro makes no assumptions about the conditional
 distribution of the response.</p>
-<br><center>
-<img src="pic%2Frules.png" style="width:60.0%">
-</center>
-<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="how-varpro-works">How VarPro Works<a class="anchor" aria-label="anchor" href="#how-varpro-works"></a>
@@ -539,8 +535,6 @@ overridden with the use.rfq option.</p>
 Github via typing the following command in R console:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools") </span></span>
-<span><span class="co"># ensure to obtain the newest version of ‘randomForestSRC’</span></span>
-<span><span class="co"># devtools::install_github("kogalur/randomForestSRC")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"kogalur/varPro"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># another way</span></span>
@@ -549,14 +543,10 @@ Github via typing the following command in R console:</p>
 <div class="section level3">
 <h3 id="a-quick-example-of-regression">A Quick Example of Regression<a class="anchor" aria-label="anchor" href="#a-quick-example-of-regression"></a>
 </h3>
-<p>XXXX BostonHousing XXXXX XXX what is a rule Example 1 but no zeta
-Figure 2 XXX XXX local.std = TRUE averaged T test statistics then std =
-1, cutoff is based on pure noise ; local.std = FALSE Algorithm 1
-XXXX</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(varPro)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## check the data</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">data</span>(Boston,<span class="at">package =</span> <span class="st">"MASS"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">data</span>(Boston, <span class="at">package =</span> <span class="st">"MASS"</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="fu">head</span>(Boston)</span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="sc">&gt;</span>      crim zn indus chas   nox    rm  age    dis rad tax ptratio  black lstat medv</span>
@@ -568,20 +558,28 @@ XXXX</p>
 <span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">6</span> <span class="fl">0.02985</span>  <span class="dv">0</span>  <span class="fl">2.18</span>    <span class="dv">0</span> <span class="fl">0.458</span> <span class="fl">6.430</span> <span class="fl">58.7</span> <span class="fl">6.0622</span>   <span class="dv">3</span> <span class="dv">222</span>    <span class="fl">18.7</span> <span class="fl">394.12</span>  <span class="fl">5.21</span> <span class="fl">28.7</span></span>
 <span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
 <span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="do">## call varpro</span></span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">varpro</span>(Ozone <span class="sc">~</span> ., <span class="at">data =</span> airquality)</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">varpro</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> Boston)</span>
 <span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a></span>
 <span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="do">## extract and print importance values</span></span>
 <span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">importance</span>(o)</span>
 <span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="fu">print</span>(imp)</span>
 <span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">1</span>               mean std          z</span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">2</span> Temp    <span class="fl">2.30063451</span>   <span class="dv">1</span> <span class="fl">2.30063451</span></span>
-<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">3</span> Wind    <span class="fl">1.01446289</span>   <span class="dv">1</span> <span class="fl">1.01446289</span></span>
-<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">4</span> Solar.R <span class="fl">0.08134523</span>   <span class="dv">1</span> <span class="fl">0.08134523</span></span>
-<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="sc">&gt;</span> <span class="dv">5</span> Day     <span class="fl">0.00000000</span>   <span class="dv">1</span> <span class="fl">0.00000000</span></span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="do">## plot importance values</span></span>
-<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="fu">importance</span>(o, <span class="at">plot.it =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="sc">&gt;</span>                mean std           z</span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="sc">&gt;</span> rm      <span class="fl">2.969140511</span>   <span class="dv">1</span> <span class="fl">2.969140511</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="sc">&gt;</span> lstat   <span class="fl">2.482800388</span>   <span class="dv">1</span> <span class="fl">2.482800388</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="sc">&gt;</span> nox     <span class="fl">1.555156676</span>   <span class="dv">1</span> <span class="fl">1.555156676</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="sc">&gt;</span> ptratio <span class="fl">1.539066319</span>   <span class="dv">1</span> <span class="fl">1.539066319</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="sc">&gt;</span> dis     <span class="fl">1.187100301</span>   <span class="dv">1</span> <span class="fl">1.187100301</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="sc">&gt;</span> crim    <span class="fl">1.036214622</span>   <span class="dv">1</span> <span class="fl">1.036214622</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="sc">&gt;</span> black   <span class="fl">0.792734163</span>   <span class="dv">1</span> <span class="fl">0.792734163</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="sc">&gt;</span> tax     <span class="fl">0.243342026</span>   <span class="dv">1</span> <span class="fl">0.243342026</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="sc">&gt;</span> indus   <span class="fl">0.164194597</span>   <span class="dv">1</span> <span class="fl">0.164194597</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="sc">&gt;</span> age     <span class="fl">0.006461955</span>   <span class="dv">1</span> <span class="fl">0.006461955</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="sc">&gt;</span> chas    <span class="fl">0.000000000</span>   <span class="dv">1</span> <span class="fl">0.000000000</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="sc">&gt;</span> rad     <span class="fl">0.000000000</span>   <span class="dv">1</span> <span class="fl">0.000000000</span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="do">## plot importance values</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="fu">importance</span>(o, <span class="at">plot.it =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><br><img src="pic%2Fairquality.png" style="width:60.0%"><br> In the
 above output, lines 1-5 display the VarPro importance in the
 <code>airquality</code>: the first column lists the name of the
@@ -597,6 +595,10 @@ while noise variables are marked in blue color.</p>
 <p>Note that not all of the variables will be listed nor plotted in the
 output since the varPro algorithm prefilters noise variables before
 calculating the importance values.</p>
+<p>XXXX BostonHousing XXXXX XXX what is a rule Example 1 but no zeta
+Figure 2 XXX XXX local.std = TRUE averaged T test statistics then std =
+1, cutoff is based on pure noise ; local.std = FALSE Algorithm 1
+XXXX</p>
 <div class="section level4">
 <h4 id="cross-validated-cutoff-value-for-varpro">Cross-Validated Cutoff Value for VarPro<a class="anchor" aria-label="anchor" href="#cross-validated-cutoff-value-for-varpro"></a>
 </h4>
