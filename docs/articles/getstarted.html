@@ -106,15 +106,7 @@
     GitHub
   </a>
 </li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/kogalur/varPro/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-    GitHub
-  </a>
-</li>
+      
       </ul>
 </div>
 <!--/.nav-collapse -->
@@ -137,9 +129,6 @@ survival and unsupervised settings</h1>
 (<a href="mailto:hemant.ishwaran@gmail.com" class="email">hemant.ishwaran@gmail.com</a>)</h4>
             
             <h4 data-toc-skip class="date">2025-04-13</h4>
-      
-      <small class="dont-index">Source: <a href="https://github.com/kogalur/varPro/blob/HEAD/vignettes/getstarted.Rmd" class="external-link"><code>vignettes/getstarted.Rmd</code></a></small>
-      <div class="hidden name"><code>getstarted.Rmd</code></div>
 
     </div>
 
@@ -572,10 +561,8 @@ customize how split-weights</a></p>
 <h2 id="variable-selection-and-thresholding">Variable Selection and Thresholding<a class="anchor" aria-label="anchor" href="#variable-selection-and-thresholding"></a>
 </h2>
 <p>Variables are ranked based on their VarPro importance scores. Larger
-values indicate more influential features. You can use cross-validation
-(<a href="getstarted.html#cross-validated-cutoff-value-for-varpro">via
-cv.varpro</a>) to select a threshold for identifying relevant
-variables.</p>
+values indicate more influential features. You can use <a href="getstarted.html#cross-validated-cutoff-value-for-varpro">cross-validation</a>)
+to select a threshold for identifying relevant variables.</p>
 </div>
 <div class="section level2">
 <h2 id="performance-and-customization">Performance and Customization<a class="anchor" aria-label="anchor" href="#performance-and-customization"></a>
@@ -652,14 +639,7 @@ Github via typing the following command in R console:</p>
 <span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="do">## plot importance values</span></span>
 <span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="fu">importance</span>(o, <span class="at">plot.it =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p><br><img src="pic%2Fairquality.png" style="width:60.0%"><br> In the
-above output, <code>print(imp)</code> display the VarPro importance in
-the <code>Boston</code>: the first column lists the name of the
-variable, the following columns listed the estimator for the VarPro
-importance value, followed by its standard devidation, and the last
-column shows the VarPro standardized importance. Note that
-<code>local.std = TRUE</code> averaged T test statistics then
-<code>std = 1</code>, cutoff is based on pure noise;
-<code>local.std = FALSE</code> directly implement Algorithm 1 from <span class="citation">[7]</span> (read the paper <a href="https://arxiv.org/abs/2409.09003" class="external-link">here</a>).</p>
+above output, <code>print(imp)</code> display the VarPro importance.</p>
 <p>In the above figure, important variables are marked in red color
 while noise variables are marked in blue color.</p>
 <p class="comment">
@@ -733,11 +713,7 @@ standard deviation rule. The conservative list comprises variables using
 the largest cutoff with error rate within one standard deviation from
 the optimal cutoff error rate, whereas the liberal list uses the
 smallest cutoff value with error rate within one standard deviation of
-the optimal cutoff error rate. The variables in the “conservative” list
-are displayed in lines for <code>$imp.conserve</code> with its cutoff
-value listed in <code>$zcut.conserve</code>, while the variables in the
-“liberal” list are displayed in lines for <code>$imp.liberal</code> with
-its cutoff value listed in <code>$zcut.liberal</code>.</p>
+the optimal cutoff error rate.</p>
 </div>
 </div>
 </div>
@@ -1155,10 +1131,6 @@ classifier <span>(RFQ)</span> vignette. 2021. <a href="http://randomforestsrc.or
 6. O’Brien R, Ishwaran H. A random forests quantile classifier for class
 imbalanced data. Pattern recognition. 2019;90:232–49.
 </div>
-<div id="ref-lu2024model" class="csl-entry">
-7. Lu M, Ishwaran H. Model-independent variable selection via the
-rule-based variable priority. arXiv preprint arXiv:240909003. 2024.
-</div>
 </div>
 </div>
   </div>
@@ -1166,6 +1138,9 @@ rule-based variable priority. arXiv preprint arXiv:240909003. 2024.
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
       </div>
+      
+              <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 
 </div>
 
