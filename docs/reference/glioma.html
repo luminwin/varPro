@@ -150,8 +150,7 @@ and pathways of progression in diffuse glioma. Cell, 164, 550-563.</p>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, <span class="va">glioma</span>, nodesize<span class="op">=</span><span class="fl">2</span>, max.tree<span class="op">=</span><span class="fl">250</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## obtain importance values</span></span>
-<span><span class="co">## use cutoff of 0.5 standard deviation</span></span>
-<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span>, cutoff <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
+<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## print the (unconditional) importance</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">imp</span><span class="op">$</span><span class="va">unconditional</span><span class="op">)</span><span class="op">)</span></span>

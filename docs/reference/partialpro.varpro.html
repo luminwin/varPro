@@ -109,7 +109,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">partialpro</span><span class="op">(</span><span class="va">object</span>, <span class="va">xvar.names</span>, <span class="va">nvar</span>,</span>
-<span>  <span class="va">target</span>, <span class="va">learner</span>, method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"unsupv"</span>, <span class="st">"rnd"</span>, <span class="st">"auto"</span><span class="op">)</span>,</span>
+<span>  <span class="va">target</span>, <span class="va">learner</span>, <span class="va">newdata</span>, method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"unsupv"</span>, <span class="st">"rnd"</span>, <span class="st">"auto"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>, papply <span class="op">=</span> <span class="va">mclapply</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -138,14 +138,20 @@
 
   <dt id="arg-learner">learner<a class="anchor" aria-label="anchor" href="#arg-learner"></a></dt>
 <dd><p>Optional function for passing a user's personally
-     constructed learner (see details below).</p></dd>
+    constructed learner (see details below).</p></dd>
+
+
+  <dt id="arg-newdata">newdata<a class="anchor" aria-label="anchor" href="#arg-newdata"></a></dt>
+<dd><p>Optional data frame containing x-data used for the
+    analysis.  If present, partial effects are obtained for these data
+    points.  Otherwise the default action is to use the training data.</p></dd>
 
 
    <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>Isolation forest method used for unlimited virtual
-    twins.  Choices are "unsupv" (unsupervised analysis, the default),
-    "rnd" (pure random splitting) and "auto" (auto-encoder, a type of
-    multivariate forest).  See <code class="command">isopro</code> for details.</p></dd>
+     twins.  Choices are "unsupv" (unsupervised analysis, the default),
+     "rnd" (pure random splitting) and "auto" (auto-encoder, a type of
+     multivariate forest).  See <code class="command">isopro</code> for details.</p></dd>
 
 
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -214,9 +220,8 @@
     <h2>References</h2>
 
 
-<p>Lu M. and Ishwaran H. (2022).  Model-Independent Variable Selection
-  via the Rule-based Variable Priority (VarPro).</p>
-<p>Lu M. and  Ishwaran H. (2023).  Unlimited Virtual Twins.</p>
+<p>Ishwaran H. (2025).  Multivariate Statistics: Classical Foundations
+  and Modern Machine Learning, CRC (Chapman and Hall), in press.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -237,6 +242,21 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">(</span><span class="va">oo.boston</span><span class="op">&lt;-</span><span class="fu">partialpro</span><span class="op">(</span><span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>,<span class="va">BostonHousing</span><span class="op">)</span>,nvar<span class="op">=</span><span class="fl">6</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># \donttest{</span></span>
+<span></span>
+<span><span class="co">##------------------------------------------------------------------</span></span>
+<span><span class="co">##</span></span>
+<span><span class="co">## Boston housing using newdata option</span></span>
+<span><span class="co">##</span></span>
+<span><span class="co">##</span></span>
+<span><span class="co">##------------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mlbench</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">BostonHousing</span><span class="op">)</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>,<span class="va">BostonHousing</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">partialpro</span><span class="op">(</span><span class="va">o</span>,nvar<span class="op">=</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## same but using newdata (set to first 6 cases of the training data)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">partialpro</span><span class="op">(</span><span class="va">o</span>,newdata<span class="op">=</span><span class="va">o</span><span class="op">$</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span>,nvar<span class="op">=</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">##------------------------------------------------------------------</span></span>
 <span><span class="co">##</span></span>
@@ -270,6 +290,7 @@
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"BART"</span>, logical.return<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
 <span><span class="co">## varpro analysis</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">mlbench</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">BostonHousing</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>,<span class="va">BostonHousing</span><span class="op">)</span></span>
@@ -278,10 +299,16 @@
 <span><span class="va">pro</span> <span class="op">&lt;-</span> <span class="fu">partialpro</span><span class="op">(</span><span class="va">o</span>, nvar<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## partial pro call using built in gradient boosting learner</span></span>
-<span><span class="va">mypro</span> <span class="op">&lt;-</span> <span class="fu">partialpro</span><span class="op">(</span><span class="va">o</span>, nvar<span class="op">=</span><span class="fl">3</span>, learner<span class="op">=</span><span class="fu">gbm.learner</span><span class="op">(</span><span class="va">o</span>, n.trees<span class="op">=</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## mypro &lt;- partialpro(o, nvar=3, learner=gbm.learner(o, n.trees=1000, n.cores=detectCores()))</span></span>
+<span></span>
+<span><span class="co">## The only way to pass check-as-cran</span></span>
+<span><span class="va">mypro</span> <span class="op">&lt;-</span> <span class="fu">partialpro</span><span class="op">(</span><span class="va">o</span>, nvar<span class="op">=</span><span class="fl">3</span>, learner<span class="op">=</span><span class="fu">gbm.learner</span><span class="op">(</span><span class="va">o</span>, n.trees<span class="op">=</span><span class="fl">1000</span>, n.cores<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## partial pro call using built in bart learner</span></span>
-<span><span class="va">mypro2</span> <span class="op">&lt;-</span> <span class="fu">partialpro</span><span class="op">(</span><span class="va">o</span>, nvar<span class="op">=</span><span class="fl">3</span>, learner<span class="op">=</span><span class="fu">bart.learner</span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## mypro2 &lt;- partialpro(o, nvar=3, learner=bart.learner(o, mc.cores=detectCores()))</span></span>
+<span></span>
+<span><span class="co">## The only way to pass check-as-cran</span></span>
+<span><span class="va">mypro2</span> <span class="op">&lt;-</span> <span class="fu">partialpro</span><span class="op">(</span><span class="va">o</span>, nvar<span class="op">=</span><span class="fl">3</span>, learner<span class="op">=</span><span class="fu">bart.learner</span><span class="op">(</span><span class="va">o</span>, mc.cores<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## compare the learners</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
@@ -335,7 +362,7 @@
 <span></span>
 <span><span class="co">## quickly impute the data; log transform the outcome</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">housing</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">housing</span> <span class="op">&lt;-</span> <span class="fu">impute</span><span class="op">(</span><span class="va">SalePrice</span><span class="op">~</span><span class="va">.</span>, <span class="va">housing</span>, splitrule<span class="op">=</span><span class="st">"random"</span>, nimpute<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">housing</span> <span class="op">&lt;-</span> <span class="fu">randomForestSRC</span><span class="fu">::</span><span class="fu"><a href="https://www.randomforestsrc.org//reference/impute.rfsrc.html">impute</a></span><span class="op">(</span><span class="va">SalePrice</span><span class="op">~</span><span class="va">.</span>, <span class="va">housing</span>, splitrule<span class="op">=</span><span class="st">"random"</span>, nimpute<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">housing</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">dta</span><span class="op">$</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">housing</span><span class="op">$</span><span class="va">SalePrice</span><span class="op">)</span></span>
 <span><span class="va">dta</span><span class="op">$</span><span class="va">SalePrice</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>

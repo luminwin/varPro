@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.71</span>
       </span>
     </div>
 
@@ -106,12 +106,7 @@
     GitHub
   </a>
 </li>
-      </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/kogalur/varPro/" class="external-link">
-    
-      </ul>
+      
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -130,8 +125,10 @@
 <br><br> Aster Shear (<a href="mailto:aster.shear@gmail.com" class="email">aster.shear@gmail.com</a>) <br><br> Udaya B. Kogalur (<a href="mailto:ubk@kogalur.com" class="email">ubk@kogalur.com</a>) <br><br><a href="https://ishwaran.org/ishwaran.html" class="external-link">Hemant Ishwaran</a>
 (<a href="mailto:hemant.ishwaran@gmail.com" class="email">hemant.ishwaran@gmail.com</a>)</h4>
             
-            <h4 data-toc-skip class="date">2025-04-10</h4>
+            <h4 data-toc-skip class="date">2025-04-22</h4>
       
+      <small class="dont-index">Source: <a href="https://github.com/kogalur/varPro/blob/HEAD/vignettes/speedup.Rmd" class="external-link"><code>vignettes/speedup.Rmd</code></a></small>
+      <div class="hidden name"><code>speedup.Rmd</code></div>
 
     </div>
 
@@ -239,12 +236,12 @@ font-size: 16px;
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a> </span>
 <span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(o))</span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>          mean std         z</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>x<span class="fl">.45</span> <span class="fl">0.8379419</span>   <span class="dv">1</span> <span class="fl">0.8379419</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>x<span class="fl">.14</span> <span class="fl">0.8366714</span>   <span class="dv">1</span> <span class="fl">0.8366714</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>x<span class="fl">.32</span> <span class="fl">0.8217622</span>   <span class="dv">1</span> <span class="fl">0.8217622</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>x<span class="fl">.19</span> <span class="fl">0.8161004</span>   <span class="dv">1</span> <span class="fl">0.8161004</span></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>x<span class="fl">.3</span>  <span class="fl">0.8092829</span>   <span class="dv">1</span> <span class="fl">0.8092829</span></span></code></pre></div>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>             z</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>x<span class="fl">.43</span> <span class="fl">0.8533468</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>x<span class="fl">.47</span> <span class="fl">0.8523626</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>x<span class="fl">.1</span>  <span class="fl">0.8520027</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>x<span class="fl">.39</span> <span class="fl">0.8399330</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>x<span class="fl">.45</span> <span class="fl">0.8264873</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="use-smaller-bootstrap">Use smaller bootstrap<a class="anchor" aria-label="anchor" href="#use-smaller-bootstrap"></a>
@@ -259,12 +256,12 @@ font-size: 16px;
 <span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a> </span>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(o))</span>
 <span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>          mean std         z</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>x<span class="fl">.39</span> <span class="fl">0.8282467</span>   <span class="dv">1</span> <span class="fl">0.8282467</span></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>x<span class="fl">.5</span>  <span class="fl">0.8280109</span>   <span class="dv">1</span> <span class="fl">0.8280109</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>x<span class="fl">.15</span> <span class="fl">0.8247403</span>   <span class="dv">1</span> <span class="fl">0.8247403</span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>x<span class="fl">.37</span> <span class="fl">0.8222917</span>   <span class="dv">1</span> <span class="fl">0.8222917</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>x<span class="fl">.42</span> <span class="fl">0.8105492</span>   <span class="dv">1</span> <span class="fl">0.8105492</span></span></code></pre></div>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>             z</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>x<span class="fl">.38</span> <span class="fl">0.8454787</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>x<span class="fl">.40</span> <span class="fl">0.8260607</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>x<span class="fl">.22</span> <span class="fl">0.8227180</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>x<span class="fl">.6</span>  <span class="fl">0.8196515</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>x<span class="fl">.29</span> <span class="fl">0.8087301</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
