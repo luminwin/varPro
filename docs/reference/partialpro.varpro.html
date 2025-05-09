@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -119,39 +119,31 @@
 
 <p></p>
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>VarPro object obtained from previous call to <code>varpro</code>.</p></dd>
+<dd><p><code>VarPro</code> object returned from a previous call to <code>varpro</code>.</p></dd>
 
 
   <dt id="arg-xvar-names">xvar.names<a class="anchor" aria-label="anchor" href="#arg-xvar-names"></a></dt>
-<dd><p>Names of the x-variables to be used.</p></dd>
+<dd><p>Names of the x-variables to use.</p></dd>
 
 
   <dt id="arg-nvar">nvar<a class="anchor" aria-label="anchor" href="#arg-nvar"></a></dt>
-<dd><p>Number of variables to be used. Default is all.</p></dd>
+<dd><p>Number of variables to include. Defaults to all.</p></dd>
 
 
   <dt id="arg-target">target<a class="anchor" aria-label="anchor" href="#arg-target"></a></dt>
-<dd><p>For classification, an integer or character value
-    specifying the class that the partial effect is computed for
-    (defaults to the last class).</p></dd>
+<dd><p>For classification, specifies the class for which the partial effect is computed. Can be an integer or character label. Defaults to the last class.</p></dd>
 
 
   <dt id="arg-learner">learner<a class="anchor" aria-label="anchor" href="#arg-learner"></a></dt>
-<dd><p>Optional function for passing a user's personally
-    constructed learner (see details below).</p></dd>
+<dd><p>Optional function specifying a user-defined prediction model. See <code>Details</code>.</p></dd>
 
 
   <dt id="arg-newdata">newdata<a class="anchor" aria-label="anchor" href="#arg-newdata"></a></dt>
-<dd><p>Optional data frame containing x-data used for the
-    analysis.  If present, partial effects are obtained for these data
-    points.  Otherwise the default action is to use the training data.</p></dd>
+<dd><p>Optional data frame containing test features. If not provided, the training data is used.</p></dd>
 
 
-   <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Isolation forest method used for unlimited virtual
-     twins.  Choices are "unsupv" (unsupervised analysis, the default),
-     "rnd" (pure random splitting) and "auto" (auto-encoder, a type of
-     multivariate forest).  See <code class="command">isopro</code> for details.</p></dd>
+  <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
+<dd><p>Isolation forest method used for Unlimited Virtual Twins (UVT). Options are <code>"unsupv"</code> (default), <code>"rnd"</code> (pure random splitting), and <code>"auto"</code> (autoencoder). See <code>isopro</code> for details.</p></dd>
 
 
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -159,13 +151,11 @@
 
 
   <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Use mclapply or lapply.</p></dd>
+<dd><p>Parallel apply method; typically <code>mclapply</code> or <code>lapply</code>.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional hidden options: "cut", "nsmp", "nvirtual",
-    "nmin", "alpha", "df", "sampsize", "ntree", "nodesize",
-    "mse.tolerance".</p></dd>
+<dd><p>Additional hidden options: <code>"cut"</code>, <code>"nsmp"</code>, <code>"nvirtual"</code>, <code>"nmin"</code>, <code>"alpha"</code>, <code>"df"</code>, <code>"sampsize"</code>, <code>"ntree"</code>, <code>"nodesize"</code>, <code>"mse.tolerance"</code>.</p></dd>
 
 
 </dl></div>
@@ -173,43 +163,19 @@
     <h2>Details</h2>
 
 
-<p>Obtain partial effects for requested variables from a VarPro analysis.
-  Some variables will have been filtered in the VarPro analysis and in
-  such cases their partial effects cannot be obtained (as filtered
-  variables are considered to be noisy variables).</p>
-<p>Partial effects are obtained using predicted values from the random
-  forest object built during the VarPro analysis.  Unlimited
-  Virtual Twins (UVT) are used to restrict the prediction call to
-  partial plot data (i.e. the artificially created data used for the
-  partial effects estimation) that meet an isolation forest criteria
-  specified by the internal option <code>cut</code>, a small percentile
-  value which filters unlikely to occur partial data.  Isolation
-  forests are constructed via the function <code class="command">isopro</code>.</p>
-<p>For regression, the partial effect is on the scale of the response;
-  for survival it is either mortality (default) or RMST (the latter when
-  the user specifies this in the original <a href="varpro.html">varpro</a> call: see
-  examples below); for classification it is the log-odds for the
-  specified target class label (see examples below).</p>
-<p>Partial effects are estimated locally using polynomial linear models
-  fit to the predicted values from the learner.  Degrees of freedom of
-  the local polynomial model is set by option <code>df</code> (the default is
-  2 corresponding to a quadratic model).</p>
-<p>By default, the random forest built during the VarPro analysis is used
-  for prediction, however users can provide their own predictor using
-  option <code>learner</code>.  The user's learner should be trained using the
-  training data used in the varpro analysis.  <code>learner</code> then takes
-  the form of a function whose input is a data frame containing feature
-  values and whose output is the predicted value from the user's
-  learner.  For regression and survival, the output should be a vector.
-  For classification, the output should be matrix whose columns are the
-  predicted probability for each class label given in the order of the
-  original class outcome. If the input is missing, the function should
-  return the predicted values for the original training data.  See the
-  examples below which illustrate using an external: (1) random forest
-  learner (which can sometimes be better than the random forests learner built
-  during the VarPro analysis); (2) gradient tree boosting learner; and
-  (3) BART (Bayesian Adaptive Regression Trees).</p>
-    </div>
+<p>Computes partial effects for selected variables based on a <code>VarPro</code> analysis. If a variable was filtered out during VarPro (e.g., due to noise), its partial effect cannot be computed.</p>
+<p>Partial effects are derived using predictions from the forest built during VarPro. These predictions are restricted using Unlimited Virtual Twins (UVT), which apply an isolation forest criterion to filter unlikely combinations of partial data. The filtering threshold is governed by the internal <code>cut</code> parameter. Isolation forests are constructed via <code>isopro</code>.</p>
+<p>Interpretation of partial effects depends on the outcome type:</p><ul><li><p>For regression: effects are on the response scale.</p></li>
+<li><p>For survival: effects are either on mortality (default) or RMST (if specified in the original <code>varpro</code> call).</p></li>
+<li><p>For classification: effects are log-odds for the specified <code>target</code> class.</p></li>
+</ul><p>Partial effects are estimated locally using polynomial linear models fit to the predicted values. The degrees of freedom for the local model are controlled by the <code>df</code> option (default = 2, i.e., quadratic).</p>
+<p>By default, predictions use the forest from the VarPro object. Alternatively, users may supply a custom prediction function via <code>learner</code>. This function should accept a data frame of features and return:</p><ul><li><p>A numeric vector for regression or survival outcomes.</p></li>
+<li><p>A matrix of class probabilities (one column per class, in original class order) for classification.</p></li>
+<li><p>If <code>newdata</code> is missing, the function should return predictions on the original training data.</p></li>
+</ul><p>See the examples for use cases with external learners, including:</p><ol><li><p>Random forest (external to VarPro),</p></li>
+<li><p>Gradient tree boosting,</p></li>
+<li><p>Bayesian Additive Regression Trees (BART).</p></li>
+</ol></div>
     <div id="author">
     <h2>Author</h2>
 

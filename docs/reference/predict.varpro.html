@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -108,8 +108,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'varpro'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -118,15 +117,15 @@
 
 <p></p>
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>VarPro object obtained from previous call to <code>varpro</code>.</p></dd>
+<dd><p>VarPro object returned from a previous call to <code>varpro</code>.</p></dd>
 
 
   <dt id="arg-newdata">newdata<a class="anchor" aria-label="anchor" href="#arg-newdata"></a></dt>
-<dd><p>Test data. If not provided the training data is used.</p></dd>
+<dd><p>Optional test data. If not provided, predictions are computed using the training data (out-of-bag).</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional options.</p></dd>
+<dd><p>Additional arguments passed to internal methods.</p></dd>
 
 
 </dl></div>
@@ -134,13 +133,8 @@
     <h2>Details</h2>
 
 
-
-<p>The VarPro method uses the rules obtained from a random forest
-  constructed by guided tree-splitting where variables are selected
-  according to a split-weight obtained in a pre-processing step.</p>
-<p>This function returns the predicted values for this random forest on
-  the provided test data, <code>newdata</code> (if not provided, predicted
-  values are the out-of-bag predicted values for the training data).</p>
+<p>VarPro uses rules extracted from a random forest built using guided tree-splitting, where variables are selected based on split-weights computed in a preprocessing step.</p>
+<p>This function returns predicted values for the input data. If <code>newdata</code> is provided, predictions are made on that data; otherwise, out-of-bag predictions for the training data are returned.</p>
     </div>
     <div id="author">
     <h2>Author</h2>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -122,15 +122,15 @@
 
 <p></p>
 <dl><dt id="arg-f">f<a class="anchor" aria-label="anchor" href="#arg-f"></a></dt>
-<dd><p>Formula describing the model to be fit.</p></dd>
+<dd><p>Model formula specifying the outcome and predictors.</p></dd>
 
 
   <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Training data set (a data frame).</p></dd>
+<dd><p>Training data set (data frame).</p></dd>
 
 
   <dt id="arg-nvar">nvar<a class="anchor" aria-label="anchor" href="#arg-nvar"></a></dt>
-<dd><p>Upper limit to number of variables returned.</p></dd>
+<dd><p>Maximum number of variables to return.</p></dd>
 
 
   <dt id="arg-ntree">ntree<a class="anchor" aria-label="anchor" href="#arg-ntree"></a></dt>
@@ -138,29 +138,23 @@
 
 
   <dt id="arg-local-std">local.std<a class="anchor" aria-label="anchor" href="#arg-local-std"></a></dt>
-<dd><p>Use locally standardized importance?</p></dd>
+<dd><p>Use locally standardized importance values?</p></dd>
 
 
   <dt id="arg-zcut">zcut<a class="anchor" aria-label="anchor" href="#arg-zcut"></a></dt>
-<dd><p>Grid of positive pre-specified cutoff values.</p></dd>
+<dd><p>Grid of positive cutoff values used for selecting top variables.</p></dd>
 
 
   <dt id="arg-nblocks">nblocks<a class="anchor" aria-label="anchor" href="#arg-nblocks"></a></dt>
-<dd><p>This is like the number of folds used in M-fold
-    validation.</p></dd>
+<dd><p>Number of blocks (folds) for cross-validation.</p></dd>
 
 
   <dt id="arg-split-weight">split.weight<a class="anchor" aria-label="anchor" href="#arg-split-weight"></a></dt>
-<dd><p>Use guided tree-splitting?  Features selected to
-  split a tree node are selected with probability according to a
-  split-weight value, the latter by default being acquired in a
-  preliminary lasso+tree step.</p></dd>
+<dd><p>Use guided tree-splitting? Variables are selected for splitting with probability proportional to split-weights, obtained by default from a preliminary lasso+tree step.</p></dd>
 
 
   <dt id="arg-split-weight-method">split.weight.method<a class="anchor" aria-label="anchor" href="#arg-split-weight-method"></a></dt>
-<dd><p>Optional character string (or vector)
-  specifying the method used to generate the split-weights.  If not
-  specified, defaults to a lasso+tree step.</p></dd>
+<dd><p>Character string or vector specifying how split-weights are generated. Defaults to lasso+tree.</p></dd>
 
 
   <dt id="arg-sparse">sparse<a class="anchor" aria-label="anchor" href="#arg-sparse"></a></dt>
@@ -168,8 +162,7 @@
 
 
   <dt id="arg-nodesize">nodesize<a class="anchor" aria-label="anchor" href="#arg-nodesize"></a></dt>
-<dd><p>Nodesize of trees. If not specified, value is set
-  using an internal function optimized for sample size and dimension.</p></dd>
+<dd><p>Minimum terminal node size. If not specified, an internal function sets the value based on sample size and data dimension.</p></dd>
 
 
   <dt id="arg-max-rules-tree">max.rules.tree<a class="anchor" aria-label="anchor" href="#arg-max-rules-tree"></a></dt>
@@ -177,11 +170,11 @@
 
 
   <dt id="arg-max-tree">max.tree<a class="anchor" aria-label="anchor" href="#arg-max-tree"></a></dt>
-<dd><p>Maximum number of trees used for extracting rules.</p></dd>
+<dd><p>Maximum number of trees used for rule extraction.</p></dd>
 
 
   <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Use mclapply or lapply.</p></dd>
+<dd><p>Apply method; either <code>mclapply</code> or <code>lapply</code>.</p></dd>
 
 
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -189,22 +182,19 @@
 
 
   <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>Seed for repeatability.</p></dd>
+<dd><p>Seed for reproducibility.</p></dd>
 
 
   <dt id="arg-fast">fast<a class="anchor" aria-label="anchor" href="#arg-fast"></a></dt>
-<dd><p>Use fast random forests, <code class="command">rfsrc.fast</code>, in place of <code class="command">rfsrc</code>?
-          Improves speed but may be less accurate.</p></dd>
+<dd><p>Use <code>rfsrc.fast</code> in place of <code>rfsrc</code>? May improve speed at the cost of accuracy.</p></dd>
 
-	
+
   <dt id="arg-crps">crps<a class="anchor" aria-label="anchor" href="#arg-crps"></a></dt>
-<dd><p>Use CRPS (continuous rank probability score) for
-     estimating survival performance (default is to use Harrel's C-index)?
-     Only applies to survival families.</p></dd>
+<dd><p>Use CRPS (continuous ranked probability score) instead of Harrell's C-index for evaluating survival performance? Applies only to survival families.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Further arguments to be passed to <code class="command">varpro</code>.</p></dd>
+<dd><p>Additional arguments passed to <code>varpro</code>.</p></dd>
 
 
 </dl></div>
@@ -272,7 +262,7 @@
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span>     </span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vdv</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">cv.varpro</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">vdv</span><span class="op">)</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">cv.varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">vdv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
@@ -364,7 +354,7 @@
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">cv.varpro</span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span>, rmst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">cv.varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span>, rmst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
@@ -373,7 +363,7 @@
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">peakVO2</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">ttodead</span>, <span class="va">died</span><span class="op">)</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span>
+<span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">ttodead</span>, <span class="va">died</span><span class="op">)</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Harrel's C-index (default)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">cv.varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">peakVO2</span>, ntree <span class="op">=</span> <span class="fl">100</span>, fast <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>

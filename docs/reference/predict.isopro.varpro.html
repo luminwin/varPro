@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -117,20 +117,19 @@
 
 <p></p>
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>isopro object obtained from previous call.</p></dd>
+<dd><p><code>isopro</code> object returned from a previous call.</p></dd>
 
 
   <dt id="arg-newdata">newdata<a class="anchor" aria-label="anchor" href="#arg-newdata"></a></dt>
-<dd><p>Test data. If not provided the training data
-  is used.</p></dd>
+<dd><p>Optional test data. If not provided, the training data is used.</p></dd>
 
 
   <dt id="arg-quantiles">quantiles<a class="anchor" aria-label="anchor" href="#arg-quantiles"></a></dt>
-<dd><p>Return quantiles (default) or case depth values?</p></dd>
+<dd><p>Logical. If <code>TRUE</code> (default), returns quantile values; if <code>FALSE</code>, returns case depth values.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional options.</p></dd>
+<dd><p>Additional arguments passed to internal methods.</p></dd>
 
 
 </dl></div>
@@ -138,13 +137,8 @@
     <h2>Details</h2>
 
 
-<p>Uses previously constructed isopro object to identify anomalous
-  observations in test data.  Values returned are quantile values
-  indicating depth of test data relative to original training data.
-  Small values indicate outliers.  To return depth values, use
-  <code>quantiles</code>="FALSE".</p>
-
-
+<p>Uses a previously constructed <code>isopro</code> object to assess anomalous observations in the test data. By default, returns quantile values representing the depth of each test observation relative to the original training data. Smaller values indicate greater outlyingness.</p>
+<p>To return raw depth values instead of quantiles, set <code>quantiles = FALSE</code>.</p>
     </div>
     <div id="author">
     <h2>Author</h2>

@@ -24,7 +24,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -124,12 +124,11 @@
 
 <p></p>
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Data frame containing the usupervised data.</p></dd>
+<dd><p>Data frame containing the unsupervised data.</p></dd>
 
 
   <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Type of forest used.  Choices are "auto" (auto-encoder),
-   "unsupv" (unsupervised analysis), and "rnd" (pure random forests).</p></dd>
+<dd><p>Type of forest used. Options are <code>"auto"</code> (auto-encoder), <code>"unsupv"</code> (unsupervised analysis), and <code>"rnd"</code> (pure random forest).</p></dd>
 
 
   <dt id="arg-ntree">ntree<a class="anchor" aria-label="anchor" href="#arg-ntree"></a></dt>
@@ -137,8 +136,7 @@
 
 
   <dt id="arg-nodesize">nodesize<a class="anchor" aria-label="anchor" href="#arg-nodesize"></a></dt>
-<dd><p>Nodesize of trees. If not specified, value is set
-  using an internal function optimized for sample size and dimension.</p></dd>
+<dd><p>Minimum terminal node size. If not specified, an internal function selects an appropriate value based on sample size and dimension.</p></dd>
 
 
   <dt id="arg-max-rules-tree">max.rules.tree<a class="anchor" aria-label="anchor" href="#arg-max-rules-tree"></a></dt>
@@ -146,11 +144,11 @@
 
 
   <dt id="arg-max-tree">max.tree<a class="anchor" aria-label="anchor" href="#arg-max-tree"></a></dt>
-<dd><p>Maximum number of trees used for extracting rules.</p></dd>
+<dd><p>Maximum number of trees used to extract rules.</p></dd>
 
 
   <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Use mclapply or lapply.</p></dd>
+<dd><p>Parallel apply method; typically <code>mclapply</code> or <code>lapply</code>.</p></dd>
 
 
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -158,11 +156,11 @@
 
 
   <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>Seed for repeatability.</p></dd>
+<dd><p>Seed for reproducibility.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Further arguments to be passed to <code class="command">rfsrc</code>.</p></dd>
+<dd><p>Additional arguments passed to <code>rfsrc</code>.</p></dd>
 
 
 </dl></div>
@@ -170,17 +168,14 @@
     <h2>Details</h2>
 
 
-<p>VarPro is applied to the branches of a random forest to obtain
-  importance values.  Three types of forests can be used specified by
-  the option <code>method</code>.  The default <code>method</code>="auto" runs a
-  random forest autoencoder by fitting selected variables against
-  themselves - a special type of multivariate forest.  The second is
-  <code>method</code>="unsupv" which runs unsupervised forests.  The third is
-  random forests using pure random splitting, <code>method</code>="rnd".  For
-  very large data sets the auto-encoder might be slow.  The other two
-  methods are much faster.</p>
-<p>VarPro importance is measured by entropy defined in terms of
-  overall feature variance.</p>
+<p>VarPro is applied to the branches of a random forest to compute variable importance values. The type of forest used is controlled by the <code>method</code> option.</p>
+<p>The default, <code>method = "auto"</code>, fits a random forest autoencoder by
+regressing selected variables against themselves, a specialized form of
+multivariate forest. The alternative <code>"unsupv"</code> uses unsupervised
+forests, and <code>"rnd"</code> employs pure random splitting. For large
+datasets, the autoencoder may be slower, while the other two methods are
+typically faster.</p>
+<p>VarPro importance is quantified using an entropy-based measure defined in terms of overall feature variance.</p>
     </div>
     <div id="value">
     <h2>Value</h2>

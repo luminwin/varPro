@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -119,21 +119,19 @@
 
 <p></p>
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>partialpro object obtained from previous call to <code>partialpro</code>.</p></dd>
+<dd><p><code>partialpro</code> object returned from a previous call to <code>partialpro</code>.</p></dd>
 
 
   <dt id="arg-xvar-names">xvar.names<a class="anchor" aria-label="anchor" href="#arg-xvar-names"></a></dt>
-<dd><p>Names of the x-variables to be plotted (uses all by
-    default). Can also be integer values.</p></dd>
+<dd><p>Names (or integer indices) of the x-variables to plot. Defaults to all variables.</p></dd>
 
 
   <dt id="arg-nvar">nvar<a class="anchor" aria-label="anchor" href="#arg-nvar"></a></dt>
-<dd><p>Number of variables to be plotted. Default is all.</p></dd>
+<dd><p>Number of variables to plot. Defaults to all.</p></dd>
 
 
   <dt id="arg-parametric">parametric<a class="anchor" aria-label="anchor" href="#arg-parametric"></a></dt>
-<dd><p>Set this to true only if you think the partial
-    effect is a polynomial.</p></dd>
+<dd><p>Logical. Set to <code>TRUE</code> only if the partial effect is believed to follow a polynomial form.</p></dd>
 
 
   <dt id="arg-se">se<a class="anchor" aria-label="anchor" href="#arg-se"></a></dt>
@@ -145,17 +143,15 @@
 
 
   <dt id="arg-subset">subset<a class="anchor" aria-label="anchor" href="#arg-subset"></a></dt>
-<dd><p>Optional factor for conditioning the partial effects.
-  Does not apply if <code>parametric</code>='TRUE'.</p></dd>
+<dd><p>Optional conditioning factor. Not applicable if <code>parametric = TRUE</code>. May also be a logical or integer vector to subset the analysis.</p></dd>
 
 
   <dt id="arg-plot-it">plot.it<a class="anchor" aria-label="anchor" href="#arg-plot-it"></a></dt>
-<dd><p>If <code>FALSE</code> no plots are generated and instead
-  partial effects values are returned.</p></dd>
+<dd><p>If <code>FALSE</code>, no plot is produced; instead, partial effect values are returned.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional options passed to plot.</p></dd>
+<dd><p>Additional arguments passed to <code>plot</code>.</p></dd>
 
 
 </dl></div>
@@ -163,26 +159,11 @@
     <h2>Details</h2>
 
 
-<p>Generates a smooth partial plot for continuous variables. Smoothed
-  black lines are the partial effect and dashed red lines indicate a
-  smoothed error bar of +/- two standard errors.  Note these
-  "standard errors" are meant only to be a guide and should be
-  interpreted with caution.  For binary variables results are displayed
-  as boxplots with whiskers used to indicate the standard error.</p>
-<p>Partial effects are estimated nonparametrically using locally fit
-  polynomial models.  These are the values displayed by default and
-  should be used in any setting where the partial effect is expected to
-  be nonlinear.  Use option <code>parametric</code> if the true effect is
-  believed to be a polynomial.</p>
-<p>A causal estimator can be requested in which case the value displayed
-  is the baseline subtracted parametric local estimator.</p>
-<p>Plots can be conditioned using option <code>subset</code> which takes the
-  form of a factor of length equal to the original data sample size.
-  This produces partial effects conditioned on the levels of the
-  provided factor.  <code>subset</code> can also be specified by a vector of
-  logical values or a vector of integer values indicating cases of
-  interest. In this scenario, the analysis is confined to the requested
-  subset of the data.</p>
+<p>Generates smoothed partial effect plots for continuous variables. The solid black line represents the estimated partial effect; dashed red lines show an approximate plus-minus standard error band. These standard errors are intended as heuristic guides and should be interpreted cautiously.</p>
+<p>Partial effects are estimated nonparametrically using locally fitted polynomial models. This is the default behavior and is recommended when effects are expected to be nonlinear. Use <code>parametric = TRUE</code> if the underlying effect is believed to follow a global polynomial form.</p>
+<p>For binary variables, partial effects are shown as boxplots, with whiskers reflecting variability analogous to standard error.</p>
+<p>The causal estimator, when requested, displays the baseline-subtracted parametric local effect.</p>
+<p>Conditioning is supported via the <code>subset</code> option. When supplied as a factor (with length equal to the original data), the plot is stratified by its levels. Alternatively, <code>subset</code> can be a logical or integer vector indicating the cases to include in the analysis.</p>
     </div>
     <div id="author">
     <h2>Author</h2>

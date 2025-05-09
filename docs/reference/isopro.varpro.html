@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -121,42 +121,35 @@
 
 <p></p>
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>VarPro object obtained from previous call.</p></dd>
+<dd><p><code>VarPro</code> object returned from a previous call.</p></dd>
 
 
   <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Isolation forest method to be used.  Choices are
-    "unsupv" (unsupervised analysis, the default), "rnd" (pure random
-    splitting) and "auto" (auto-encoder, a type of multivariate
-    forest).</p></dd>
+<dd><p>Isolation forest method. Options are <code>"unsupv"</code> (unsupervised analysis, default), <code>"rnd"</code> (pure random splitting), and <code>"auto"</code> (auto-encoder, a type of multivariate forest).</p></dd>
 
 
   <dt id="arg-sampsize">sampsize<a class="anchor" aria-label="anchor" href="#arg-sampsize"></a></dt>
-<dd><p>Function specifying the sample size used for
-    constructing a tree where sampling is without replacement.  Can also
-    be specified using a number.</p></dd>
+<dd><p>Function or numeric value specifying the sample size used for constructing each tree. Sampling is without replacement.</p></dd>
 
 
   <dt id="arg-ntree">ntree<a class="anchor" aria-label="anchor" href="#arg-ntree"></a></dt>
-<dd><p>Number of trees.</p></dd>
+<dd><p>Number of trees to grow.</p></dd>
 
 
   <dt id="arg-nodesize">nodesize<a class="anchor" aria-label="anchor" href="#arg-nodesize"></a></dt>
-<dd><p>Minumum terminal node size.</p></dd>
+<dd><p>Minimum terminal node size.</p></dd>
 
 
   <dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>
-<dd><p>Formula for when supervised isolation forest is to be used.
-    Ignored if <code>object</code> is provided.</p></dd>
+<dd><p>Formula used for supervised isolation forest. Ignored if <code>object</code> is provided.</p></dd>
 
 
   <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Data frame used for fitting isolation forest.  Ignored if
-  <code>object</code> is provided.</p></dd>
+<dd><p>Data frame used to fit the isolation forest. Ignored if <code>object</code> is provided.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional options to be passed to <code class="command">rfsrc</code>.</p></dd>
+<dd><p>Additional arguments passed to <code>rfsrc</code>.</p></dd>
 
 
 </dl></div>
@@ -164,41 +157,21 @@
     <h2>Details</h2>
 
 
-<p>Isolation Forest (Liu et al., 2008) is a random forest procedure for
-  detecting anomalous data.  In the original method, random trees are
-  constructed using pure random splitting with each tree constructed
-  from a subsample of the data.  Typically the subsample size is much
-  smaller than 0.632, the rate used with random forests.  The idea
-  is that under random splitting, and because of extreme subsampling,
-  rare or anomalous data will tend to split early and become isolated
-  very quickly.  Because of this, the depth of an observation, defined
-  as the number of splits needed to be become a terminal node, can be
-  used to find anomalous observations:  anomalous data points are
-  those with relatively small depth values.</p>
-<p>There are several ways to run the code.  The default is to provide a
-  formula and a data set via options <code>formula</code> and <code>data</code>.  In
-  the case of unsupervised analysis (which is the usual application of
-  isolation forest), the user only needs to pass in a data set using
-  <code>data</code>.  In this setting, the option <code>method</code> is applicable
-  (see above).  In the case where both a formula and data set is
-  provided, then a supervised analysis is run.  The option <code>method</code>
-  is no longer applicable in this case.  This is the less conventional
-  approach.</p>
-<p>Another approach (also unconventional) is to pass a VarPro object
-  obtained from a previous call (typically this being an unsupervised
-  analysis using <code>unsupv</code>, but this is not the only choice).
-  Unsupervised isolation forests is then applied to the dimension
-  reduced x matrix from the VarPro call.  Therefore this results in an
-  analysis similar to using only the option <code>data</code>, however the
-  difference and advantage is that dimension reduction is achieved via
-  VarPro.</p>
-<p>Users should experiment with the type of isolation forest method used.
-  This is because while the original isolation forest performs well,
-  there are many examples where it can be improved upon.  See the
-  examples below which illustrate that the pure random splitting "rnd"
-  method may not always be the best.</p>
-<p>Computationally "rnd" is the fastest method followed by "unsupv".  The
-  slowest is "auto" which should be used in low-dimensional problems.</p>
+<p>Isolation Forest (Liu et al., 2008) is a random forest-based method for
+detecting anomalous observations. In its original form, trees are
+constructed using pure random splits, with each tree built from a small
+subsample of the data, typically much smaller than the standard 0.632
+fraction used in random forests. The idea is that anomalous or rare
+observations are more likely to be isolated early, requiring fewer
+splits to reach terminal nodes. Thus, observations with relatively small
+depth values (i.e., shallow nodes) are considered anomalies.</p>
+
+<p>There are several ways to apply the method:</p>
+<ul><li><p>The default approach is to supply a <code>formula</code> and <code>data</code> to build a supervised isolation forest. If only <code>data</code> is provided (i.e., no response), an unsupervised analysis is performed. In this case, the <code>method</code> option is used to specify the type of isolation forest (e.g., <code>"unsupv"</code>, <code>"rnd"</code>, or <code>"auto"</code>).</p></li>
+<li><p>If both a formula and data are provided, a supervised model is fit. In this case, <code>method</code> is ignored. While less conventional, this approach may be useful in certain applications.</p></li>
+<li><p>Alternatively, a <code>VarPro</code> object may be supplied. This is typically from an unsupervised VarPro call (e.g., using <code>unsupv</code>), but other configurations are also supported. In this setting, isolation forest is applied to the reduced feature matrix extracted from the VarPro object. This is similar to using the <code>data</code> option alone but with the advantage of prior dimension reduction.</p></li>
+</ul><p>Users are encouraged to experiment with the choice of <code>method</code>, as the original isolation forest (<code>"rnd"</code>) performs well in many scenarios but can be improved upon in others. For example, in some cases, <code>"unsupv"</code> or <code>"auto"</code> may yield better detection performance.</p>
+<p>In terms of computational cost, <code>"rnd"</code> is the fastest, followed by <code>"unsupv"</code>. The slowest is <code>"auto"</code>, which is best suited for low-dimensional settings.</p>
     </div>
     <div id="author">
     <h2>Author</h2>

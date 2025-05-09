@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -126,61 +126,53 @@
 
 <p></p>
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>rfsrc object</p></dd>
+<dd><p><code>rfsrc</code> object.</p></dd>
 
 
   <dt id="arg-newdata">newdata<a class="anchor" aria-label="anchor" href="#arg-newdata"></a></dt>
-<dd><p>Optional test data. If provided, the output equals the
-    branch and complementary branch membership of the training data
-    corresponding to the test data.</p></dd>
+<dd><p>Optional test data. If provided, returns branch and complementary branch membership of the training data corresponding to the test cases.</p></dd>
 
 
   <dt id="arg-m-target">m.target<a class="anchor" aria-label="anchor" href="#arg-m-target"></a></dt>
-<dd><p>Character value for multivariate families
-    specifying the target outcome to be used.  If left unspecified, the
-    algorithm will choose a default target.</p></dd>
+<dd><p>Character string specifying the target outcome for multivariate families. If unspecified, a default is selected automatically.</p></dd>
 
 
   <dt id="arg-max-rules-tree">max.rules.tree<a class="anchor" aria-label="anchor" href="#arg-max-rules-tree"></a></dt>
-<dd><p>Maximum number of rules per tree.</p></dd>
+<dd><p>Maximum number of rules extracted per tree.</p></dd>
 
 
   <dt id="arg-max-tree">max.tree<a class="anchor" aria-label="anchor" href="#arg-max-tree"></a></dt>
-<dd><p>Maximum number of trees used for extracting rules.</p></dd>
+<dd><p>Maximum number of trees used for rule extraction.</p></dd>
 
 
   <dt id="arg-stat">stat<a class="anchor" aria-label="anchor" href="#arg-stat"></a></dt>
-<dd><p>Determines which statistic is output. Either importance,
-    complement mean, or oob mean.</p></dd>
+<dd><p>Statistic to output. Options include <code>"importance"</code>, <code>"complement mean"</code>, and <code>"oob mean"</code>.</p></dd>
 
 
   <dt id="arg-membership">membership<a class="anchor" aria-label="anchor" href="#arg-membership"></a></dt>
-<dd><p>Return OOB and complementary OOB membership indices
-    for each rule?</p></dd>
+<dd><p>Return out-of-bag and complementary membership indices for each rule?</p></dd>
 
 
   <dt id="arg-neighbor">neighbor<a class="anchor" aria-label="anchor" href="#arg-neighbor"></a></dt>
-<dd><p>Nearest neighbor parameter.  Only applies when
-  <code>newdata</code> is provided.</p></dd>
+<dd><p>Nearest neighbor parameter, used only when <code>newdata</code> is specified.</p></dd>
 
 
   <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
-<dd><p>Seed for repeatability.</p></dd>
+<dd><p>Seed for reproducibility.</p></dd>
 
 
   <dt id="arg-do-trace">do.trace<a class="anchor" aria-label="anchor" href="#arg-do-trace"></a></dt>
-<dd><p>Used to obtain detailed trace.</p></dd>
+<dd><p>Enable detailed trace output.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Further arguments.</p></dd>
+<dd><p>Additional arguments.</p></dd>
 
 
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p>Not intended for end-user use and is primarily meant for internal
-  use by the package.</p>
+    <p>Not intended for direct end-user use; primarily designed for internal package operations.</p>
     </div>
 
     <div id="ref-examples">

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.63</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
       </span>
     </div>
 
@@ -117,17 +117,15 @@
 
 <p></p>
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
-<dd><p>Unsupervised VarPro object from previous call to
-    <code>unsupv</code>.  Only applies if <code>method</code>="auto" was used.</p></dd>
+<dd><p>Unsupervised VarPro object from a previous call to <code>unsupv</code>. Only applies if <code>method = "auto"</code> was used.</p></dd>
 
 
   <dt id="arg-newdata">newdata<a class="anchor" aria-label="anchor" href="#arg-newdata"></a></dt>
-<dd><p>Test data. If not provided the training data
-  is used.</p></dd>
+<dd><p>Optional test data. If not provided, the training data is used.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional options.</p></dd>
+<dd><p>Additional arguments passed to internal methods.</p></dd>
 
 
 </dl></div>
@@ -135,15 +133,10 @@
     <h2>Details</h2>
 
 
-<p>Applies to unsupervised VarPro objects built using autoencoder
-  (<code>method</code>="auto").  The unsupervised object contains a
-  multivariate random forest which is used to predict on test data.</p>
-<p>Returns a matrix containing predicted values where each column is predicted
-  value for a feature (hot-encoding is applied) and with attributes:</p>
-<p></p><ol><li><p><code>mse</code>: standardized mean-squared error averaged across
-    feature.</p></li>
-<li><p><code>mse.all</code>: standardized mean-squared error for each
-    feature.</p></li>
+<p>Applies to unsupervised VarPro objects built using the autoencoder (<code>method = "auto"</code>). The object contains a multivariate random forest used to generate predictions for the test data.</p>
+<p>Returns a matrix of predicted values, where each column corresponds to a feature (with one-hot encoding applied). The result includes the following attributes:</p>
+<ol><li><p><code>mse</code>: Standardized mean squared error averaged across features.</p></li>
+<li><p><code>mse.all</code>: Standardized mean squared error for each individual feature.</p></li>
 </ol></div>
     <div id="author">
     <h2>Author</h2>
