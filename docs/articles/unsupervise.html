@@ -434,6 +434,12 @@ row serves as a ensembled regression model, representing the importance
 scores for the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>th
 variable.</p>
+
+<p class="comment">
+For large datasets, consider using <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to
+improve computation time.
+</p>
+
 <table class="table">
 <colgroup><col width="100%"></colgroup>
 <thead><tr class="header">
@@ -448,10 +454,7 @@ control.</td>
 </table>
 </div>
 
-<p class="comment">
-For large datasets, consider using <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to
-improve computation time.
-</p>
+
 
 <div class="section level2">
 <h2 id="clusterpro-for-unsupervised-data-visualization">ClusterPro for Unsupervised Data Visualization<a class="anchor" aria-label="anchor" href="#clusterpro-for-unsupervised-data-visualization"></a>
