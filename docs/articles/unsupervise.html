@@ -447,6 +447,12 @@ control.</td>
 </tr></tbody>
 </table>
 </div>
+
+<p class="comment">
+For large datasets, consider using <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to
+improve computation time.
+</p>
+
 <div class="section level2">
 <h2 id="clusterpro-for-unsupervised-data-visualization">ClusterPro for Unsupervised Data Visualization<a class="anchor" aria-label="anchor" href="#clusterpro-for-unsupervised-data-visualization"></a>
 </h2>
@@ -505,10 +511,7 @@ structures in the data.</p>
 <span><span class="va">ogU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpro.varpro.html">clusterpro</a></span><span class="op">(</span><span class="va">dgU</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>;<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ogU</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></code></pre></div>
 <p><img src="pic%2Fglass3.png" style="width:60.0%"></p>
-<p class="comment">
-For large datasets, consider using <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to
-improve computation time.
-</p>
+
 <br><br><p class="comment2">
 <strong> Cite this vignette as </strong> <br> M. Lu, L. Zhou, A.
 Shear, U. B. Kogalur, and H. Ishwaran. 2024. “varPro: variable selection
