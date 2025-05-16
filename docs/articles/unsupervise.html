@@ -126,7 +126,7 @@
 <br><br> Lili Zhou (<a href="mailto:lxz516@miami.edu" class="email">lxz516@miami.edu</a>) <br><br> Aster Shear (<a href="mailto:aster.shear@gmail.com" class="email">aster.shear@gmail.com</a>) <br><br> Udaya B. Kogalur (<a href="mailto:ubk@kogalur.com" class="email">ubk@kogalur.com</a>) <br><br><a href="https://ishwaran.org/ishwaran.html" class="external-link">Hemant Ishwaran</a>
 (<a href="mailto:hemant.ishwaran@gmail.com" class="email">hemant.ishwaran@gmail.com</a>)</h4>
             
-            <h4 data-toc-skip class="date">2025-05-15</h4>
+            <h4 data-toc-skip class="date">2025-05-16</h4>
       
 
 
@@ -366,71 +366,64 @@ importance value. 2. An <code>entropy</code> list containing the
 <code>$entropy</code> output. This approach gives full control over the
 definition of importance scores.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">unsupv</span>(BostonHousing, <span class="at">ntree =</span> <span class="dv">3</span>, <span class="at">max.rules.tree =</span> <span class="dv">10</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_along</span>(o<span class="sc">$</span>entropy), <span class="cf">function</span>(j) {</span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  rules <span class="ot">&lt;-</span> o<span class="sc">$</span>entropy[[j]]</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  rO <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(rules, <span class="cf">function</span>(r) {</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    xC <span class="ot">&lt;-</span> o<span class="sc">$</span>x[r[[<span class="dv">1</span>]], ]</span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    xO <span class="ot">&lt;-</span> o<span class="sc">$</span>x[r[[<span class="dv">2</span>]], ]</span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(xC)), <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(xO))))</span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    xnm <span class="ot">&lt;-</span> <span class="fu">names</span>(o<span class="sc">$</span>entropy)[j]</span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">rbind</span>(xC, xO)</span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x[, <span class="fu">colnames</span>(x) <span class="sc">!=</span> xnm]</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    </span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>      <span class="fu">suppressWarnings</span>(glmnet<span class="sc">::</span><span class="fu">cv.glmnet</span>(<span class="fu">as.matrix</span>(x), y, <span class="at">family =</span> <span class="st">"binomial"</span>)),</span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    )</span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(fit)) {</span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>      beta <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">ncol</span>(x)), <span class="fu">colnames</span>(x))</span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>      vec <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit, <span class="at">s =</span> fit<span class="sc">$</span>lambda.min)[<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>]</span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>      beta[<span class="fu">names</span>(vec)] <span class="ot">&lt;-</span> vec</span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>      beta</span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>      <span class="cn">NULL</span></span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>    }</span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>  }))</span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(rO)) {</span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>    val <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(rO, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>    <span class="fu">names</span>(val) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(rO)</span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>    <span class="fu">return</span>(val)</span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>  }</span>
-<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="fu">setNames</span>(<span class="fu">names</span>(o<span class="sc">$</span>entropy)))</span>
-<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a></span>
-<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="fu">print</span>(imp)</span>
-<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a></span>
-<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>               zn        indus           nox          rm           age           dis</span>
-<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a>crim   <span class="fl">0.00000000</span>  <span class="fl">0.000000000</span> <span class="sc">-</span><span class="fl">1.804789e+00</span>  <span class="fl">0.00000000</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.0000000000</span></span>
-<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a>zn     <span class="fl">0.00000000</span> <span class="sc">-</span><span class="fl">0.054268954</span>  <span class="fl">4.243649e+00</span>  <span class="fl">0.00000000</span>  <span class="fl">6.905852e-03</span> <span class="sc">-</span><span class="fl">0.0050155399</span></span>
-<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a>indus  <span class="fl">0.00000000</span>  <span class="fl">0.000000000</span>  <span class="fl">6.217249e-15</span>  <span class="fl">0.00000000</span> <span class="sc">-</span><span class="fl">1.387779e-16</span>  <span class="fl">0.0000000000</span></span>
-<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a>nox   <span class="sc">-</span><span class="fl">0.45188489</span> <span class="sc">-</span><span class="fl">0.007111930</span> <span class="sc">-</span><span class="fl">3.445737e-02</span>  <span class="fl">0.01632731</span> <span class="sc">-</span><span class="fl">1.242414e-02</span> <span class="sc">-</span><span class="fl">0.0261679775</span></span>
-<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a>age   <span class="sc">-</span><span class="fl">0.84147835</span> <span class="sc">-</span><span class="fl">0.008322689</span> <span class="sc">-</span><span class="fl">4.419269e-02</span> <span class="sc">-</span><span class="fl">1.48451375</span>  <span class="fl">6.310935e-02</span> <span class="sc">-</span><span class="fl">0.0221405101</span></span>
-<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a>dis    <span class="fl">0.00000000</span>  <span class="fl">0.000000000</span>  <span class="fl">0.000000e+00</span> <span class="sc">-</span><span class="fl">2.02203226</span>  <span class="fl">0.000000e+00</span> <span class="sc">-</span><span class="fl">0.0215760450</span></span>
-<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a>rad    <span class="fl">0.11487828</span>  <span class="fl">0.203971985</span>  <span class="fl">1.194059e-01</span>  <span class="fl">6.99318035</span>  <span class="fl">6.490399e-02</span>  <span class="fl">0.0000000000</span></span>
-<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a>lstat <span class="sc">-</span><span class="fl">0.03952603</span>  <span class="fl">0.000000000</span> <span class="sc">-</span><span class="fl">7.685882e-03</span>  <span class="fl">0.00000000</span>  <span class="fl">4.816130e-02</span>  <span class="fl">0.0005229465</span></span>
-<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>medv   <span class="fl">0.00000000</span>  <span class="fl">0.000000000</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.00000000</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.0000000000</span></span>
-<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a>                rad           tax       ptratio             b         lstat          medv</span>
-<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a>crim   <span class="fl">1.800897e-01</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.000000e+00</span> <span class="sc">-</span><span class="fl">0.0305719866</span>  <span class="fl">0.000000e+00</span></span>
-<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a>zn    <span class="sc">-</span><span class="fl">7.380532e-03</span>  <span class="fl">9.727299e-05</span>  <span class="fl">1.394769e-01</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.0497803084</span>  <span class="fl">5.410241e-02</span></span>
-<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a>indus  <span class="fl">1.665335e-16</span>  <span class="fl">0.000000e+00</span> <span class="sc">-</span><span class="fl">1.026956e-15</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.0000000000</span>  <span class="fl">0.000000e+00</span></span>
-<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a>nox    <span class="fl">5.971833e-02</span> <span class="sc">-</span><span class="fl">3.786816e-03</span>  <span class="fl">2.024506e-01</span> <span class="sc">-</span><span class="fl">8.312778e-05</span>  <span class="fl">0.0057292192</span> <span class="sc">-</span><span class="fl">9.552421e-05</span></span>
-<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a>age   <span class="sc">-</span><span class="fl">3.146945e-02</span>  <span class="fl">4.064564e-05</span>  <span class="fl">1.093638e-01</span> <span class="sc">-</span><span class="fl">2.720655e-03</span> <span class="sc">-</span><span class="fl">0.1035461292</span> <span class="sc">-</span><span class="fl">8.328340e-03</span></span>
-<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a>dis    <span class="fl">0.000000e+00</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.000000e+00</span>  <span class="fl">1.500092e-03</span>  <span class="fl">0.0000000000</span>  <span class="fl">0.000000e+00</span></span>
-<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>rad    <span class="fl">0.000000e+00</span>  <span class="fl">4.990327e-03</span> <span class="sc">-</span><span class="fl">8.565689e-02</span> <span class="sc">-</span><span class="fl">3.741271e-04</span>  <span class="fl">0.0000000000</span>  <span class="fl">0.000000e+00</span></span>
-<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a>lstat <span class="sc">-</span><span class="fl">2.713875e-02</span>  <span class="fl">0.000000e+00</span> <span class="sc">-</span><span class="fl">7.106972e-04</span> <span class="sc">-</span><span class="fl">5.111105e-03</span> <span class="sc">-</span><span class="fl">0.0001332375</span>  <span class="fl">0.000000e+00</span></span>
-<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a>medv  <span class="sc">-</span><span class="fl">2.994488e-02</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.000000e+00</span>  <span class="fl">0.0000000000</span>  <span class="fl">3.541930e-03</span></span>
-<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>               chas</span>
-<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a>crim   <span class="fl">0.000000e+00</span></span>
-<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a>zn     <span class="fl">0.000000e+00</span></span>
-<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a>indus  <span class="fl">2.575717e-14</span></span>
-<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a>nox    <span class="fl">2.319079e-01</span></span>
-<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a>age    <span class="fl">3.698366e-01</span></span>
-<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a>dis    <span class="fl">0.000000e+00</span></span>
-<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a>rad    <span class="fl">0.000000e+00</span></span>
-<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a>lstat <span class="sc">-</span><span class="fl">1.665748e-01</span></span>
-<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a>medv   <span class="fl">0.000000e+00</span></span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">unsupv</span>(BostonHousing, <span class="at">ntree=</span><span class="dv">3</span>, <span class="at">max.rules.tree=</span><span class="dv">10</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">## convert original/release region into two-class problem</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="do">## define importance as the lasso beta values </span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="do">## For faster performance on Unix systems, consider using:</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="do">## library(parallel)</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="do">## imp &lt;- do.call(rbind, mclapply(seq_along(o$entropy), function(j) { ... }))</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_along</span>(o<span class="sc">$</span>entropy), <span class="cf">function</span>(j) {</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  rO <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(o<span class="sc">$</span>entropy[[j]], <span class="cf">function</span>(r) {</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    xC <span class="ot">&lt;-</span> o<span class="sc">$</span>x[r[[<span class="dv">1</span>]],<span class="fu">names</span>(o<span class="sc">$</span>entropy),drop<span class="ot">=</span><span class="cn">FALSE</span>]</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    xO <span class="ot">&lt;-</span> o<span class="sc">$</span>x[r[[<span class="dv">2</span>]],<span class="fu">names</span>(o<span class="sc">$</span>entropy),drop<span class="ot">=</span><span class="cn">FALSE</span>]</span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(xC)), <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(xO))))</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">rbind</span>(xC, xO)</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x[, <span class="fu">colnames</span>(x) <span class="sc">!=</span> <span class="fu">names</span>(o<span class="sc">$</span>entropy)[j]]</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>      <span class="fu">suppressWarnings</span>(glmnet<span class="sc">::</span><span class="fu">cv.glmnet</span>(<span class="fu">as.matrix</span>(x), y, <span class="at">family =</span> <span class="st">"binomial"</span>)),</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>    )</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(fit)) {</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>      beta <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(o<span class="sc">$</span>entropy)), <span class="fu">names</span>(o<span class="sc">$</span>entropy))</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>      bhat <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">coef</span>(fit)[<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>])</span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>      beta[<span class="fu">names</span>(bhat)] <span class="ot">&lt;-</span> bhat</span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>      beta</span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>      <span class="cn">NULL</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>    }</span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>  }))</span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(rO)) {</span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>    val <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(rO, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>    <span class="fu">names</span>(val) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(rO)</span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>    <span class="fu">return</span>(val)</span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>  }</span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="fu">setNames</span>(<span class="fu">names</span>(o<span class="sc">$</span>entropy)))</span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="fu">print</span>(imp)</span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a>           crim         zn       indus        nox        rm        dis         rad     ptratio</span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a>crim  <span class="fl">0.0000000</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span>  <span class="fl">0.5186556</span> <span class="fl">0.0000000</span> <span class="fl">0.04332184</span> <span class="fl">0.119731180</span> <span class="fl">0.000000000</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a>zn    <span class="fl">8.3120410</span> <span class="fl">0.00000000</span> <span class="fl">0.115124727</span> <span class="fl">33.6707767</span> <span class="fl">0.0000000</span> <span class="fl">0.03767438</span> <span class="fl">0.008917331</span> <span class="fl">0.000000000</span></span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a>indus <span class="fl">0.4843001</span> <span class="fl">0.08755108</span> <span class="fl">0.000000000</span> <span class="fl">25.0019427</span> <span class="fl">0.9215305</span> <span class="fl">0.81272780</span> <span class="fl">0.192673483</span> <span class="fl">0.001807552</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>nox   <span class="fl">0.7031151</span> <span class="fl">0.01256135</span> <span class="fl">0.197637889</span>  <span class="fl">0.0000000</span> <span class="fl">0.1103938</span> <span class="fl">1.48287678</span> <span class="fl">0.559274899</span> <span class="fl">0.186624787</span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a>dis   <span class="fl">0.0000000</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span> <span class="fl">15.4727857</span> <span class="fl">0.0000000</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span> <span class="fl">0.000000000</span></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a>rad   <span class="fl">5.2414764</span> <span class="fl">0.00000000</span> <span class="fl">1.189979771</span>  <span class="fl">2.7000874</span> <span class="fl">0.0000000</span> <span class="fl">0.77578291</span> <span class="fl">0.000000000</span> <span class="fl">0.712066509</span></span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a>lstat <span class="fl">0.5619712</span> <span class="fl">0.00000000</span> <span class="fl">0.005360787</span>  <span class="fl">0.7473822</span> <span class="fl">1.2940632</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span> <span class="fl">0.000000000</span></span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a>medv  <span class="fl">0.0000000</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span>  <span class="fl">0.0000000</span> <span class="fl">2.9693986</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span> <span class="fl">0.298883360</span></span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a>           lstat       medv</span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a>crim  <span class="fl">0.02642667</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a>zn    <span class="fl">0.00000000</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>indus <span class="fl">0.01050727</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a>nox   <span class="fl">0.03387207</span> <span class="fl">0.02638144</span></span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a>dis   <span class="fl">0.00000000</span> <span class="fl">0.00000000</span></span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>rad   <span class="fl">0.01790731</span> <span class="fl">0.02322370</span></span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a>lstat <span class="fl">0.00000000</span> <span class="fl">0.05517093</span></span>
+<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a>medv  <span class="fl">0.12894740</span> <span class="fl">0.00000000</span></span></code></pre></div>
 <p>In the above examples, the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>th
 row serves as a ensembled regression model, representing the importance
@@ -441,6 +434,9 @@ variable.</p>
 For large datasets, consider using <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to
 improve computation time.
 </p>
+<hr>
+<p>Users can also use the fast built in hidden lasso-beta entropy
+function: <code>varPro:::get.beta.entropy(o)</code></p>
 <table class="table">
 <colgroup><col width="100%"></colgroup>
 <thead><tr class="header">
