@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.72</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.75</span>
       </span>
     </div>
 
@@ -918,7 +918,7 @@ unsupervised problems<a class="anchor" aria-label="anchor" href="#more-examples-
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">data</span>(BostonHousing, <span class="at">package =</span> <span class="st">"mlbench"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">## default call</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">unsupv</span>(BostonHousing)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">uvarpro</span>(BostonHousing)</span>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">importance</span>(o))</span>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>             mean       std         z</span>
