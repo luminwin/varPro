@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.79</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -108,7 +108,8 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">importance</span><span class="op">(</span><span class="va">o</span>, local.std <span class="op">=</span> <span class="cn">TRUE</span>, y.external <span class="op">=</span> <span class="cn">NULL</span>,</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'varpro'</span></span>
+<span><span class="fu">importance</span><span class="op">(</span><span class="va">o</span>, local.std <span class="op">=</span> <span class="cn">TRUE</span>, y.external <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  cutoff <span class="op">=</span> <span class="fl">0.79</span>, trim <span class="op">=</span> <span class="fl">0.1</span>, plot.it <span class="op">=</span> <span class="cn">FALSE</span>, conf <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="va">conf</span><span class="op">)</span> <span class="st">"Importance"</span> <span class="kw">else</span> <span class="st">"Standardized Importance"</span>,</span>
 <span>  <span class="va">max.rules.tree</span>, <span class="va">max.tree</span>,</span>
@@ -219,10 +220,32 @@ confidence-style boxplots.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># \donttest{</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
-<span><span class="co">## regression example</span></span>
+<span><span class="co">## toy example - needed to pass CRAN test</span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="co">## mtcars regression</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">mtcars</span>, ntree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu">importance</span><span class="op">(</span><span class="va">o</span>, local.std <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">imp</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span><span class="co">## iris example</span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="co">## apply varpro to the iris data</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">iris</span>, max.tree <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## print/plot the results</span></span>
+<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu">importance</span><span class="op">(</span><span class="va">o</span>, plot.it <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">imp</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span><span class="co">## boston housing: regression</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">BostonHousing</span>, package <span class="op">=</span> <span class="st">"mlbench"</span><span class="op">)</span></span>
@@ -239,12 +262,13 @@ confidence-style boxplots.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">imp</span><span class="op">)</span></span>
 <span></span>
 <span></span>
+<span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## illustrates y-external: regression example</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
 <span><span class="co">## friedman1 - standard application of varpro</span></span>
-<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu">mlbench</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.friedman1.html" class="external-link">mlbench.friedman1</a></span><span class="op">(</span><span class="fl">250</span><span class="op">)</span>,noise<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">250</span><span class="op">*</span><span class="fl">10</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>,<span class="fl">250</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu">mlbench</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.friedman1.html" class="external-link">mlbench.friedman1</a></span><span class="op">(</span><span class="fl">250</span><span class="op">)</span>,noise<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">250</span><span class="op">*</span><span class="fl">10</span>,<span class="op">-</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>,<span class="fl">250</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>,<span class="va">d</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">importance</span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -275,11 +299,11 @@ confidence-style boxplots.</p>
 <span><span class="co">## illustrates y-external: survival</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">importance</span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## importance using  external rsf predictor</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">importance</span><span class="op">(</span><span class="va">o</span>,y.external<span class="op">=</span><span class="fu">randomForestSRC</span><span class="fu">::</span><span class="fu"><a href="https://www.randomforestsrc.org//reference/rfsrc.html">rfsrc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span><span class="op">$</span><span class="va">predicted.oob</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">importance</span><span class="op">(</span><span class="va">o</span>,y.external<span class="op">=</span><span class="fu">randomForestSRC</span><span class="fu">::</span><span class="fu"><a href="https://www.randomforestsrc.org//reference/rfsrc.html">rfsrc</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span><span class="op">$</span><span class="va">predicted.oob</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## importance using  external randomized predictor</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">importance</span><span class="op">(</span><span class="va">o</span>,y.external<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">o</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
