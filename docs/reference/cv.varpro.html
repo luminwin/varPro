@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.79</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -150,7 +150,10 @@
 
 
   <dt id="arg-split-weight">split.weight<a class="anchor" aria-label="anchor" href="#arg-split-weight"></a></dt>
-<dd><p>Use guided tree-splitting? Variables are selected for splitting with probability proportional to split-weights, obtained by default from a preliminary lasso+tree step.</p></dd>
+<dd><p>Use guided tree-splitting? Variables are selected
+  for splitting with probability proportional to split-weights, obtained
+  by default from a preliminary lasso+tree step.</p></dd>
+
 
 
   <dt id="arg-split-weight-method">split.weight.method<a class="anchor" aria-label="anchor" href="#arg-split-weight-method"></a></dt>
@@ -162,7 +165,10 @@
 
 
   <dt id="arg-nodesize">nodesize<a class="anchor" aria-label="anchor" href="#arg-nodesize"></a></dt>
-<dd><p>Minimum terminal node size. If not specified, an internal function sets the value based on sample size and data dimension.</p></dd>
+<dd><p>Minimum terminal node size. If not specified, an
+  internal function sets the value based on sample size and data
+  dimension.</p></dd>
+
 
 
   <dt id="arg-max-rules-tree">max.rules.tree<a class="anchor" aria-label="anchor" href="#arg-max-rules-tree"></a></dt>
@@ -174,7 +180,7 @@
 
 
   <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Apply method; either <code>mclapply</code> or <code>lapply</code>.</p></dd>
+<dd><p>Apply function used for R parallelization.</p></dd>
 
 
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -380,7 +386,7 @@
 <span></span>
 <span><span class="co">## roughly impute the data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">housing</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">housing2</span> <span class="op">&lt;-</span> <span class="fu">randomForestSRC</span><span class="fu">:::</span><span class="fu">get.na.roughfix</span><span class="op">(</span><span class="va">housing</span><span class="op">)</span></span>
+<span><span class="va">housing2</span> <span class="op">&lt;-</span> <span class="fu"><a href="utilities_internal.html">roughfix</a></span><span class="op">(</span><span class="va">housing</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## use bigger nodesize</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">cv.varpro</span><span class="op">(</span><span class="va">SalePrice</span><span class="op">~</span><span class="va">.</span>, <span class="va">housing2</span>, fast <span class="op">=</span> <span class="cn">TRUE</span>, ntree <span class="op">=</span> <span class="fl">50</span>, nodesize <span class="op">=</span> <span class="fl">150</span><span class="op">)</span><span class="op">)</span></span>

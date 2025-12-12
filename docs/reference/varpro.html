@@ -24,7 +24,7 @@ for Regression, Multivariate Regression, Classification and Survival."><meta pro
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.79</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -113,7 +113,7 @@ for Regression, Multivariate Regression, Classification and Survival.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">data</span>, nvar <span class="op">=</span> <span class="fl">30</span>, ntree <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>       split.weight <span class="op">=</span> <span class="cn">TRUE</span>, split.weight.method <span class="op">=</span> <span class="cn">NULL</span>, sparse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>       nodesize <span class="op">=</span> <span class="cn">NULL</span>, max.rules.tree <span class="op">=</span> <span class="fl">150</span>, max.tree <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">150</span>, <span class="va">ntree</span><span class="op">)</span>,</span>
-<span>       parallel <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fu">get.number.cores</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>       parallel <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fu"><a href="utilities_internal.html">get.mc.cores</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>       papply <span class="op">=</span> <span class="va">mclapply</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, seed <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -139,11 +139,17 @@ for Regression, Multivariate Regression, Classification and Survival.</p>
 
 
   <dt id="arg-split-weight">split.weight<a class="anchor" aria-label="anchor" href="#arg-split-weight"></a></dt>
-<dd><p>Use guided tree-splitting? Candidate variables for splitting are selected with probability proportional to a split-weight, obtained by default from a preliminary lasso+tree step.</p></dd>
+<dd><p>Use guided tree-splitting? Candidate variables for
+  splitting are selected with probability proportional to a
+  split-weight, obtained by default from a preliminary lasso+tree step.</p></dd>
+
 
 
   <dt id="arg-split-weight-method">split.weight.method<a class="anchor" aria-label="anchor" href="#arg-split-weight-method"></a></dt>
-<dd><p>Character string (or vector) specifying method used to generate split-weights. Defaults to lasso+tree. See <code>Details</code>.</p></dd>
+<dd><p>Character string (or vector) specifying
+  method used to generate split-weights. Defaults to lasso+tree. See
+  <code>Details</code>.</p></dd>
+
 
 
   <dt id="arg-sparse">sparse<a class="anchor" aria-label="anchor" href="#arg-sparse"></a></dt>
@@ -151,7 +157,9 @@ for Regression, Multivariate Regression, Classification and Survival.</p>
 
 
   <dt id="arg-nodesize">nodesize<a class="anchor" aria-label="anchor" href="#arg-nodesize"></a></dt>
-<dd><p>Minimum terminal node size. If not specified, value is set internally based on sample size and dimension.</p></dd>
+<dd><p>Minimum terminal node size. If not specified, value is
+    set internally based on sample size and dimension.</p></dd>
+
 
 
   <dt id="arg-max-rules-tree">max.rules.tree<a class="anchor" aria-label="anchor" href="#arg-max-rules-tree"></a></dt>
@@ -167,11 +175,18 @@ for Regression, Multivariate Regression, Classification and Survival.</p>
 
 
   <dt id="arg-cores">cores<a class="anchor" aria-label="anchor" href="#arg-cores"></a></dt>
-<dd><p>Number of cores for parallel processing. Defaults to <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>.</p></dd>
+<dd><p>Number of cores for parallel processing. Defaults to
+    <code><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">parallel::detectCores()</a></code>.</p></dd>
+
 
 
   <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Apply method for parallel execution; typically <code>mclapply</code> or <code>lapply</code>.</p></dd>
+<dd><p>Apply function used for R parallelization
+    (e.g., <code>mclapply</code> or <code>lapply</code>). The default is
+    <code>mclapply</code>, which uses multicore parallelism on Unix-like systems
+    (including macOS) and falls back to serial evaluation on Windows.
+    Users can supply <code>lapply</code> or other apply-like functions if
+    desired.</p></dd>
 
 
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -249,15 +264,23 @@ values.</p>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
+<span><span class="co">## toy example - needed to pass CRAN test</span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="co">## mtcars regression</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">mtcars</span>, ntree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## classification example: iris </span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
 <span><span class="co">## apply varpro to the iris data</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">iris</span>, max.tree <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## call the importance function and print the results</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## regression example: boston housing</span></span>
@@ -280,8 +303,6 @@ values.</p>
 <span><span class="co">## plot importance values</span></span>
 <span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span>, plot.it <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span><span class="co"># \donttest{</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## regression example: boston housing illustrating hot-encoding</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
@@ -441,7 +462,7 @@ values.</p>
 <span></span>
 <span><span class="co">## first we roughly impute the data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">housing</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
-<span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu">randomForestSRC</span><span class="fu">:::</span><span class="fu">get.na.roughfix</span><span class="op">(</span><span class="va">housing</span><span class="op">)</span></span>
+<span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="utilities_internal.html">roughfix</a></span><span class="op">(</span><span class="va">housing</span><span class="op">)</span></span>
 <span><span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## varpro call</span></span>
@@ -482,7 +503,7 @@ values.</p>
 <span><span class="va">Boston</span><span class="op">$</span><span class="va">rm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">Boston</span><span class="op">$</span><span class="va">rm</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## get default custom split-weights: a named real vector</span></span>
-<span><span class="va">swt</span> <span class="op">&lt;-</span> <span class="fu">varPro</span><span class="fu">:::</span><span class="fu">get.splitweight.custom</span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>,<span class="va">Boston</span><span class="op">)</span></span>
+<span><span class="va">swt</span> <span class="op">&lt;-</span> <span class="fu"><a href="utilities_internal.html">get.splitweight.custom</a></span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>,<span class="va">Boston</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## define custom splits weight</span></span>
 <span><span class="va">swt</span> <span class="op">&lt;-</span> <span class="va">swt</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"crim"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">swt</span><span class="op">)</span><span class="op">)</span> <span class="op">|</span></span>
@@ -505,8 +526,6 @@ values.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="utilities_internal.html">get.vimp</a></span><span class="op">(</span><span class="va">o</span>, pretty<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="utilities_internal.html">get.orgvimp</a></span><span class="op">(</span><span class="va">o</span>, pretty<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span></span>
 <span></span>
 <span><span class="co"># }</span></span></code></pre></div>
     </div>

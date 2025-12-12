@@ -27,7 +27,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.79</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -238,7 +238,18 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co">## ------------------------------------------------------------</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span></span>
+<span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span><span class="co">## toy example - needed to pass CRAN test</span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="co">## mtcars unsupervised regression</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">uvarpro</span><span class="op">(</span><span class="va">mtcars</span>, ntree <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## boston housing: default call</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
@@ -257,8 +268,6 @@
 <span><span class="co">## unsupervised splitting </span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">uvarpro</span><span class="op">(</span><span class="va">BostonHousing</span>, method <span class="op">=</span> <span class="st">"unsupv"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># \donttest{</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## boston housing: illustrates hot-encoding</span></span>
@@ -336,7 +345,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">housing</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## to speed up analysis, convert all factors to real values</span></span>
-<span><span class="va">iowa</span> <span class="op">&lt;-</span> <span class="fu">randomForestSRC</span><span class="fu">:::</span><span class="fu">get.na.roughfix</span><span class="op">(</span><span class="va">housing</span><span class="op">)</span></span>
+<span><span class="va">iowa</span> <span class="op">&lt;-</span> <span class="fu"><a href="utilities_internal.html">roughfix</a></span><span class="op">(</span><span class="va">housing</span><span class="op">)</span></span>
 <span><span class="va">iowa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">iowa</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## canonical call</span></span>
@@ -386,8 +395,6 @@
 <span></span>
 <span>  <span class="co">## return importance and in the second slot the entropy list </span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>imp <span class="op">=</span> <span class="va">imp</span>, <span class="va">entropy</span><span class="op">)</span></span>
-<span></span>
-<span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">uvarpro</span><span class="op">(</span><span class="va">BostonHousing</span>, entropy<span class="op">=</span><span class="va">my.entropy</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
@@ -446,6 +453,8 @@
 <span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">uvarpro</span><span class="op">(</span><span class="va">BostonHousing</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="utilities_internal.html">get.beta.entropy</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># }</span></span></code></pre></div>
     </div>

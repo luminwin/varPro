@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.79</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -108,7 +108,8 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">predict.uvarpro</span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'uvarpro'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newdata</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -133,8 +134,17 @@
     <h2>Details</h2>
 
 
-<p>Applies to unsupervised VarPro objects built using the autoencoder (<code>method = "auto"</code>). The object contains a multivariate random forest used to generate predictions for the test data.</p>
-<p>Returns a matrix of predicted values, where each column corresponds to a feature (with one-hot encoding applied). The result includes the following attributes:</p>
+<p>Applies to unsupervised VarPro objects built using the autoencoder
+(<code>method = "auto"</code>). The object contains a multivariate random
+forest used to generate predictions for the test data.</p>
+    </div>
+    <div id="value">
+    <h2>Value</h2>
+
+
+<p>Returns a matrix of predicted values, where each column corresponds to a
+feature (with one-hot encoding applied). The result includes the
+following attributes:</p>
 <ol><li><p><code>mse</code>: Standardized mean squared error averaged across features.</p></li>
 <li><p><code>mse.all</code>: Standardized mean squared error for each individual feature.</p></li>
 </ol></div>
