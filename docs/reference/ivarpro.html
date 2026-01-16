@@ -27,7 +27,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -117,17 +117,19 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ivarpro</span><span class="op">(</span><span class="va">object</span>,</span>
+<span>        adaptive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        cut <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        cut.max <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>        ncut <span class="op">=</span> <span class="fl">21</span>,</span>
+<span>        ncut <span class="op">=</span> <span class="fl">51</span>,</span>
 <span>        nmin <span class="op">=</span> <span class="fl">20</span>, nmax <span class="op">=</span> <span class="fl">150</span>,</span>
 <span>        y.external <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        noise.na <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        papply <span class="op">=</span> <span class="va">mclapply</span>,</span>
 <span>        max.rules.tree <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        max.tree <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        use.loo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        adaptive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>        use.abs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>        path.store.membership <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        keep.data <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -139,6 +141,18 @@
 <dd><p><code>varpro</code> object from a previous call to
     <code>varpro</code>, or a <code>rfsrc</code> object.</p></dd>
 
+
+
+  <dt id="arg-adaptive">adaptive<a class="anchor" aria-label="anchor" href="#arg-adaptive"></a></dt>
+<dd><p>Logical. If <code>FALSE</code> and <code>cut</code> is not
+  supplied, the <code>cut</code> grid is constructed as <code>seq(0, cut.max,
+  length.out = ncut)</code>. If <code>TRUE</code> (default) and <code>cut</code> is not
+  supplied, a data-adaptive upper bound for the neighborhood scale is
+  computed from the sample size using a simple bandwidth-style
+  rule-of-thumb, and <code>cut</code> is constructed as a sequence from 0 to
+  this data-adaptive maximum (subject to <code>cut.max</code>). This provides
+  a convenient way to automatically sharpen the local neighborhood for
+  case-specific gradients when the sample size is moderate to large.</p></dd>
 
 
   <dt id="arg-cut">cut<a class="anchor" aria-label="anchor" href="#arg-cut"></a></dt>
@@ -167,9 +181,9 @@
 
   <dt id="arg-ncut">ncut<a class="anchor" aria-label="anchor" href="#arg-ncut"></a></dt>
 <dd><p>Length of the <code>cut</code> grid when <code>cut</code> is not
-  supplied. The default is <code>21</code>. The grid is constructed as
-  <code>seq(0, cut.max, length.out = ncut)</code> (or up to an adaptively
-  chosen maximum if <code>adaptive = TRUE</code>).</p></dd>
+  supplied. The grid is constructed as <code>seq(0, cut.max, length.out
+  = ncut)</code> (or up to an adaptively chosen maximum if <code>adaptive =
+  TRUE</code>).</p></dd>
 
 
 
@@ -200,10 +214,6 @@
   are set to zero.</p></dd>
 
 
-  <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Apply function used for R parallelization.</p></dd>
-
-
   <dt id="arg-max-rules-tree">max.rules.tree<a class="anchor" aria-label="anchor" href="#arg-max-rules-tree"></a></dt>
 <dd><p>Maximum number of rules per tree.  If
     unspecified, the value from the <code>varpro</code> object is used, while
@@ -224,18 +234,23 @@
   sample that satisfies <code>nmin</code> and <code>nmax</code>.</p></dd>
 
 
+  <dt id="arg-use-abs">use.abs<a class="anchor" aria-label="anchor" href="#arg-use-abs"></a></dt>
+<dd><p>Use the absolute gradient for individual importance?
+   Default is <code>FALSE</code> which uses the actual gradient.</p></dd>
 
-  <dt id="arg-adaptive">adaptive<a class="anchor" aria-label="anchor" href="#arg-adaptive"></a></dt>
-<dd><p>Logical. If <code>FALSE</code> (default) and <code>cut</code> is
-  not supplied, the <code>cut</code> grid is constructed as <code>seq(0,
-  cut.max, length.out = ncut)</code>. If <code>TRUE</code> and <code>cut</code> is not
-  supplied, a data-adaptive upper bound for the neighborhood scale is
-  computed from the sample size using a simple bandwidth-style
-  rule-of-thumb, and <code>cut</code> is constructed as a sequence from 0 to
-  this data-adaptive maximum (subject to <code>cut.max</code>). This provides
-  a convenient way to automatically sharpen the local neighborhood for
-  case-specific gradients when the sample size is moderate to large.</p></dd>
 
+  <dt id="arg-path-store-membership">path.store.membership<a class="anchor" aria-label="anchor" href="#arg-path-store-membership"></a></dt>
+<dd><p>Store the rule membership indices (OOB
+  case IDs) in the returned object for later ladder/band calculations?
+  Setting <code>FALSE</code> can substantially reduce memory usage when the
+  number of rules is large, but disables ladder-based bands in
+  <code><a href="utilities_internal.html">partial.ivarpro()</a></code> and prevents <code>ivarpro_band()</code> from being
+  used. Default is <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-keep-data">keep.data<a class="anchor" aria-label="anchor" href="#arg-keep-data"></a></dt>
+<dd><p>Save the x and y data (default is <code>TRUE</code>)?  Used
+  for downstream plots.</p></dd>
 
 
 </dl></div>
@@ -244,86 +259,107 @@
 
 
 <p>Understanding individual-level (case-specific) variable importance is
-critical in applications where personalized decisions are required.
-Traditional variable importance methods focus on average
-(population-level) effects and often fail to capture heterogeneity
-across individuals. In many real-world problems, it is not sufficient to
-determine whether a variable is important on average; we must also
-understand how it affects each individual prediction.</p>
-<p>The VarPro framework identifies feature-space regions through rule-based
-splitting and computes importance using only observed data. This avoids
-biases introduced by permutation or synthetic data, leading to robust,
-population-level importance estimates. However, VarPro does not directly
-capture individual-level effects.</p>
-<p>To address this limitation, individual variable priority (iVarPro)
-extends VarPro by estimating, for each case and each variable identified
-by the VarPro analysis, a local gradient that quantifies how small
-changes in that variable influence that case's predicted outcome.
-Formally, for each observation \(i = 1, \dots, n\) and each predictor
-\(j\) that appears as a release variable in the VarPro rule set,
-iVarPro returns a case-specific importance score measuring the
-sensitivity of the prediction for case \(i\) to perturbations in
-variable \(j\), holding the other variables locally fixed.</p>
-<p>iVarPro leverages the release region concept from VarPro. A region
-\(R\) is first defined using VarPro rules. Since using only data
-within \(R\) often results in insufficient sample size for stable
-gradient estimation, iVarPro releases \(R\) along a coordinate
-\(s\). This means the constraint on \(s\) is removed while all
-others are held fixed, yielding additional variation specifically in the
-\(s\)-direction, precisely what is needed to compute directional
-derivatives.</p>
-<p>Local gradients are then estimated via linear regression on the expanded
-region. For continuous release variables, the parameter <code>cut</code>
-controls the amount of constraint relaxation, where <code>cut = 1</code>
-corresponds to one standard deviation of the release coordinate,
-calibrated automatically from the data. When <code>cut</code> is not supplied,
-it is constructed as a grid from 0 to <code>cut.max</code>. Smaller values of
-<code>cut.max</code> force more local neighborhoods and can sharpen
-case-specific gradients near discontinuities, while larger values induce
-smoother, more global behavior.</p>
-<p>For binary or one-hot encoded release variables, the gradient is
-interpreted as a scaled finite difference in the predicted outcome
-between the two levels (0 and 1), conditional on the rule constraints
-for the other variables. In this case, the full released region is used,
-and <code>cut</code> is not used to define the local neighborhood along the
-binary coordinate.</p>
-<p>When <code>use.loo = TRUE</code>, a leave-one-out cross-validation (LOO) score
-is computed for each candidate neighborhood defined by <code>cut</code> for
-continuous release variables. The value of <code>cut</code> that minimizes the
-LOO score is selected, providing an adaptive, data-driven choice of
-expansion region size for each rule and release coordinate. When
-<code>use.loo = FALSE</code>, the expansion region is chosen based only on
-sample size, favoring the largest neighborhood that satisfies
-<code>nmin</code> and <code>nmax</code>.</p>
-<p>When <code>adaptive = TRUE</code> and <code>cut</code> is not supplied, the maximum
-neighborhood scale is chosen based on the sample size using a simple
-bandwidth-style rule-of-thumb, and the <code>cut</code> grid is constructed up
-to this data-adaptive maximum (subject to the upper bound <code>cut.max</code>).
-This can be particularly useful in settings with discontinuous or highly
-nonlinear responses, where a globally wide neighborhood may over-smooth
-important local features and obscure case-specific effects.</p>
-<p>The flexibility of this framework makes it suitable for quantifying
+important in applications where decisions are made at the level of a
+single person, unit, or record. A predictor may have only a modest
+average effect, yet be highly influential for certain cases, or the
+direction of its effect may differ across individuals.</p>
+<p>The VarPro framework summarizes population-level importance by defining
+feature-space regions using rule-based splitting and computing
+importance using only observed data. iVarPro (Lu and Ishwaran, 2025)
+extends this idea to the individual level by quantifying how sensitive
+each case's prediction is to small changes in a predictor identified by
+the VarPro rule set.</p>
+<p>For each VarPro rule, iVarPro considers the corresponding rule-defined
+region and then <em>releases</em> the rule along the rule's release
+coordinate. Intuitively, releasing a region means keeping the other rule
+constraints in place while allowing additional variation in the released
+variable, which provides the information needed to estimate a local
+directional effect. A simple local linear regression is then fit on this
+released region, and the resulting slope is used as a local,
+gradient-based priority score. Case-specific scores are obtained by
+aggregating the relevant rule-level gradients over the rules that apply
+to each case.</p>
+<p><strong>Neighborhood size and <code>cut.max</code>.</strong>
+For continuous release variables, the size of the local neighborhood
+used for slope estimation is controlled by <code>cut</code> (constructed from
+<code>cut.max</code> and <code>ncut</code> when not supplied). Smaller neighborhoods
+produce more local behavior and can better reflect sharp changes, while
+larger neighborhoods produce smoother, more global behavior. When
+<code>use.loo = TRUE</code>, the neighborhood size is chosen in a data-driven
+way using a leave-one-out criterion; when <code>use.loo = FALSE</code>, the
+choice is based on meeting the requested sample-size bounds
+<code>nmin</code> and <code>nmax</code>. When <code>adaptive = TRUE</code> and <code>cut</code> is
+not supplied, an additional sample-size based rule is used to limit the
+maximum neighborhood scale (subject to <code>cut.max</code>).</p>
+<p>For binary or one-hot encoded release variables, iVarPro interprets the
+local effect as a scaled finite difference between the two levels (0 and
+1), conditional on the other rule constraints; in this case <code>cut</code>
+does not control the neighborhood along the binary coordinate.</p>
+<p><strong>Cut.max ladder (neighborhood sensitivity).</strong>
+Because the choice of neighborhood scale can affect the estimated local
+gradients, iVarPro also records a <em>ladder</em> of rule-level gradient
+estimates across the candidate neighborhood sizes defined by the
+<code>cut</code> grid. These ladder values can be summarized (e.g., ranges or
+quantiles) and used to visualize how sensitive case-specific gradients
+are to the neighborhood choice, without repeatedly refitting iVarPro for
+many different <code>cut.max</code> values. Ladder-based case summaries require
+rule membership information; set <code>path.store.membership = TRUE</code> to
+enable ladder bands and related summaries, or leave it <code>FALSE</code> to
+reduce memory usage when the number of rules is very large.  See
+examples below.</p>
+<p><strong>Settings that are currently handled.</strong>
+The flexibility of this framework makes it suitable for quantifying
 case-specific variable importance in regression, classification, and
-survival settings.  Currently, multivariate forests are not handled.</p>
+survival settings. Currently, multivariate forests are not handled.</p>
     </div>
     <div id="value">
     <h2>Value</h2>
 
 
-<p>For univariate outcomes (and two-class classification treated as a
-single score), a numeric matrix of dimension \(n \times p_*\) containing
-case-specific (individual-level) variable priority values, where
-\(p_*\) is the number of predictor variables identified by the VarPro
-analysis (typically those used as release coordinates in the rule set).</p>
+<p>For univariate outcomes (and two-class classification treated as a single
+score), a numeric <code>data.frame</code> of dimension \(n \times p\) containing
+case-specific (individual-level) variable priority values, where \(n\) is
+the number of observations and \(p\) is the number of predictors in
+<code>object$xvar.names</code>.</p>
 <ul><li><p>Each row corresponds to a case (observation) in the original data.</p></li>
-<li><p>Each column corresponds to a predictor variable identified by the
-        VarPro analysis as having an associated release rule.</p></li>
-</ul><p>The entry in row \(i\) and column \(j\) is the iVarPro importance
-score for variable \(j\) for case \(i\), measuring the local
-sensitivity of that case's prediction to changes in that variable.
-Predictors that are never used as release variables in the VarPro
-analysis do not receive a case-specific importance score (or, depending
-on implementation, may appear with constant <code>NA</code> or zero values).</p>
+<li><p>Each column corresponds to a predictor variable in
+        <code>object$xvar.names</code>.</p></li>
+</ul><p>The entry in row \(i\) and column \(j\) is the iVarPro importance score
+for variable \(j\) for case \(i\), measuring the local sensitivity of
+that case's prediction to changes in that variable. Predictors that are never
+used as release variables in the VarPro rule set may appear with constant
+<code>NA</code> values (when <code>noise.na = TRUE</code>) or constant zero values (when
+<code>noise.na = FALSE</code>).</p>
+<p><strong>Ladder/path information.</strong>
+The returned object carries an attribute <code>"ivarpro.path"</code> containing
+additional information used for ladder-based summaries and plotting. In
+particular:</p>
+<dl><dt><code>cut</code></dt>
+<dd><p>The full <code>cut</code> grid used to evaluate candidate local
+    neighborhoods.</p></dd>
+
+  <dt><code>cut.ladder</code></dt>
+<dd><p>The interior values of <code>cut</code> (excluding the
+    endpoints) used for the cut.max ladder path.</p></dd>
+
+  <dt><code>rule.imp.ladder</code></dt>
+<dd><p>A numeric matrix of dimension \(R \times L\)
+    storing rule-level gradients selected under each ladder truncation, where
+    \(R\) is the number of retained rules and \(L = length(cut.ladder)\).</p></dd>
+
+  <dt><code>rule.variable</code></dt>
+<dd><p>Integer vector of length \(R\) giving the
+    release-variable index for each retained rule.</p></dd>
+
+  <dt><code>oobMembership</code></dt>
+<dd><p>Optional list (length \(R\)) giving the OOB
+    membership indices for each retained rule; included only when
+    <code>path.store.membership = TRUE</code>.</p></dd>
+
+
+</dl><p>Additional tuning flags and rule metadata (e.g., <code>use.loo</code>,
+<code>adaptive</code>, and tree/branch identifiers) may also be included for
+diagnostics.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -336,7 +372,8 @@ on implementation, may appear with constant <code>NA</code> or zero values).</p>
 
 
 <p>Lu, M. and Ishwaran, H. (2025). Individual variable priority: a
-  model-independent local gradient method for variable importance.</p>
+  model-independent local gradient method for variable importance.
+  <em>Artificial Intelligence Review</em>, 58:407.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -355,13 +392,23 @@ on implementation, may appear with constant <code>NA</code> or zero values).</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">peakVO2</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">ttodead</span>, <span class="va">died</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">peakVO2</span>, ntree <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
-<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">o</span>, adaptive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="utilities_internal.html">ivarpro.shap</a></span><span class="op">(</span><span class="va">imp</span>, <span class="va">o</span><span class="op">$</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## canonical standard analysis</span></span>
+<span><span class="va">imp1</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">o</span><span class="op">)</span></span>
+<span><span class="fu"><a href="utilities_internal.html">shap.ivarpro</a></span><span class="op">(</span><span class="va">imp1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## non-adaptive analysis</span></span>
+<span><span class="va">imp2</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">o</span>, adaptive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="utilities_internal.html">shap.ivarpro</a></span><span class="op">(</span><span class="va">imp2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## non-adaptive using a small cut.max</span></span>
+<span><span class="va">imp3</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">o</span>, cut.max <span class="op">=</span> <span class="fl">0.5</span>, adaptive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="utilities_internal.html">shap.ivarpro</a></span><span class="op">(</span><span class="va">imp3</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">##</span></span>
-<span><span class="co">## synthetic regression example</span></span>
+<span><span class="co">## synthetic regression example with partial plot</span></span>
 <span><span class="co">##</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
@@ -392,74 +439,47 @@ on implementation, may appear with constant <code>NA</code> or zero values).</p>
 <span>  <span class="va">dta</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co">## iVarPro importance plot</span></span>
-<span><span class="va">ivarpro.plot</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dta</span>, <span class="va">release</span> <span class="op">=</span> <span class="fl">1</span>, <span class="va">combined.range</span> <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                         <span class="va">cex</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="va">cex.title</span> <span class="op">=</span> <span class="fl">1.0</span>, <span class="va">sc</span> <span class="op">=</span> <span class="fl">5.0</span>,</span>
-<span>                         <span class="va">gscale</span> <span class="op">=</span> <span class="fl">30</span>, <span class="va">title</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">x1</span> <span class="op">&lt;-</span> <span class="va">dta</span><span class="op">[</span>, <span class="st">"x1"</span><span class="op">]</span></span>
-<span>  <span class="va">x2</span> <span class="op">&lt;-</span> <span class="va">dta</span><span class="op">[</span>, <span class="st">"x2"</span><span class="op">]</span></span>
-<span>  <span class="va">x1n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="op">{</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
-<span>  <span class="va">x2n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="op">{</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">release</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">title</span><span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="va">title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/bquote.html" class="external-link">bquote</a></span><span class="op">(</span><span class="st">"iVarPro Case-Specific Gradient "</span> <span class="op">~</span> <span class="va">x</span><span class="op">^</span><span class="op">{</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
-<span>    <span class="va">cex.pt</span> <span class="op">&lt;-</span> <span class="va">dta</span><span class="op">[</span>, <span class="st">"Importance.x1"</span><span class="op">]</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="kw">else</span> <span class="op">{</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">title</span><span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="va">title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/bquote.html" class="external-link">bquote</a></span><span class="op">(</span><span class="st">"iVarPro Case-Specific Gradient "</span> <span class="op">~</span> <span class="va">x</span><span class="op">^</span><span class="op">{</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span>
-<span>    <span class="va">cex.pt</span> <span class="op">&lt;-</span> <span class="va">dta</span><span class="op">[</span>, <span class="st">"Importance.x2"</span><span class="op">]</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">combined.range</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">cex.pt</span> <span class="op">&lt;-</span> <span class="va">cex.pt</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">dta</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Importance.x1"</span>, <span class="st">"Importance.x2"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>                           na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="va">rng</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">oldpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>                mgp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.25</span>, <span class="fl">1.0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>                bg <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span>
-<span>  <span class="va">gscalev</span> <span class="op">&lt;-</span> <span class="va">gscale</span></span>
-<span>  <span class="va">gscale</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gray"</span>, <span class="va">gscale</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span>, xlab <span class="op">=</span> <span class="va">x1n</span>, ylab <span class="op">=</span> <span class="va">x2n</span>,</span>
-<span>       ylim <span class="op">=</span> <span class="va">rng</span>, xlim <span class="op">=</span> <span class="va">rng</span>,</span>
-<span>       col <span class="op">=</span> <span class="st">"#FFA500"</span>, pch <span class="op">=</span> <span class="fl">19</span>,</span>
-<span>       cex <span class="op">=</span> <span class="op">(</span><span class="va">sc</span> <span class="op">*</span> <span class="va">cex.pt</span><span class="op">)</span>, cex.axis <span class="op">=</span> <span class="va">cex</span>, cex.lab <span class="op">=</span> <span class="va">cex</span>,</span>
-<span>       panel.first <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/graphics/rect.html" class="external-link">rect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"usr"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"usr"</span><span class="op">)</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
-<span>                          <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"usr"</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="st">"usr"</span><span class="op">)</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>,</span>
-<span>                          col <span class="op">=</span> <span class="va">gscale</span>, border <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, b <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>         lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="va">gscalev</span> <span class="op">&lt;</span> <span class="fl">50</span><span class="op">)</span> <span class="st">"white"</span> <span class="kw">else</span> <span class="st">"black"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/mtext.html" class="external-link">mtext</a></span><span class="op">(</span><span class="va">title</span>, cex <span class="op">=</span> <span class="va">cex.title</span>, line <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
 <span><span class="co">## simulate the data</span></span>
 <span><span class="va">which.simulation</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">simfunction</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, <span class="fu">true.function</span><span class="op">(</span><span class="va">which.simulation</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## varpro analysis</span></span>
-<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">df</span><span class="op">)</span></span>
+<span><span class="va">vp</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">df</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## canonical ivarpro analysis (default cut.max = 1)</span></span>
-<span><span class="va">imp1</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">o</span><span class="op">)</span></span>
+<span><span class="co">## ivarpro analysis </span></span>
+<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">vp</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## sharper local analysis using a smaller cut.max</span></span>
-<span><span class="va">imp2</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">o</span>, cut.max <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="co">## partial plot of x2 </span></span>
+<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## data-adaptive analysis</span></span>
-<span><span class="va">imp3</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">o</span>, adaptive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">## partial plot of x2 without ladder band</span></span>
+<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## build data for plotting the results (using x1 and x2)</span></span>
-<span><span class="va">df.imp1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Importance <span class="op">=</span> <span class="va">imp1</span>, <span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">df.imp2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Importance <span class="op">=</span> <span class="va">imp2</span>, <span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">df.imp3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Importance <span class="op">=</span> <span class="va">imp3</span>, <span class="va">df</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x1"</span>, <span class="st">"x2"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">## optional: use only a subset of ladder cuts</span></span>
+<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">TRUE</span>, ladder.cuts<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## plot the case-specific importance surfaces</span></span>
-<span><span class="va">oldpar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">ivarpro.plot</span><span class="op">(</span><span class="va">df.imp1</span>, <span class="fl">1</span><span class="op">)</span>; <span class="fu">ivarpro.plot</span><span class="op">(</span><span class="va">df.imp1</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu">ivarpro.plot</span><span class="op">(</span><span class="va">df.imp2</span>, <span class="fl">1</span><span class="op">)</span>; <span class="fu">ivarpro.plot</span><span class="op">(</span><span class="va">df.imp2</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu">ivarpro.plot</span><span class="op">(</span><span class="va">df.imp3</span>, <span class="fl">1</span><span class="op">)</span>; <span class="fu">ivarpro.plot</span><span class="op">(</span><span class="va">df.imp3</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></span>
+<span><span class="co">## partial plot with color/size using x1 (color) and y (size)</span></span>
+<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, col.var<span class="op">=</span><span class="st">"x1"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span><span class="co">##</span></span>
+<span><span class="co">## survival example with partial plot</span></span>
+<span><span class="co">##</span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">peakVO2</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## varpro/importance call</span></span>
+<span><span class="va">i.pv</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">ttodead</span>, <span class="va">died</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">peakVO2</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## partial plot of peak vo2</span></span>
+<span><span class="co">## color displays interval (a measure of exercise time)</span></span>
+<span><span class="co">## size displays "y" which is predicted mortality in survival</span></span>
+<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">i.pv</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"interval"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## same but using beta blockers for color</span></span>
+<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">i.pv</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"betablok"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># }</span></span></code></pre></div>
     </div>
   </div>

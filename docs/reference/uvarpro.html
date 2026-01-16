@@ -27,7 +27,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@
 <span>        method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"unsupv"</span>, <span class="st">"rnd"</span><span class="op">)</span>,</span>
 <span>        ntree <span class="op">=</span> <span class="fl">200</span>, nodesize <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        max.rules.tree <span class="op">=</span> <span class="fl">20</span>, max.tree <span class="op">=</span> <span class="fl">200</span>,</span>
-<span>        papply <span class="op">=</span> <span class="va">mclapply</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        verbose <span class="op">=</span> <span class="cn">FALSE</span>, seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>        <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -134,7 +134,10 @@
 
 
   <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>Type of forest used. Options are <code>"auto"</code> (auto-encoder), <code>"unsupv"</code> (unsupervised analysis), and <code>"rnd"</code> (pure random forest).</p></dd>
+<dd><p>Type of forest used. Options are <code>"auto"</code>
+  (auto-encoder), <code>"unsupv"</code> (unsupervised analysis), and
+  <code>"rnd"</code> (pure random forest).</p></dd>
+
 
 
   <dt id="arg-ntree">ntree<a class="anchor" aria-label="anchor" href="#arg-ntree"></a></dt>
@@ -142,7 +145,10 @@
 
 
   <dt id="arg-nodesize">nodesize<a class="anchor" aria-label="anchor" href="#arg-nodesize"></a></dt>
-<dd><p>Minimum terminal node size. If not specified, an internal function selects an appropriate value based on sample size and dimension.</p></dd>
+<dd><p>Minimum terminal node size. If not specified, an
+  internal function selects an appropriate value based on sample size
+  and dimension.</p></dd>
+
 
 
   <dt id="arg-max-rules-tree">max.rules.tree<a class="anchor" aria-label="anchor" href="#arg-max-rules-tree"></a></dt>
@@ -151,10 +157,6 @@
 
   <dt id="arg-max-tree">max.tree<a class="anchor" aria-label="anchor" href="#arg-max-tree"></a></dt>
 <dd><p>Maximum number of trees used to extract rules.</p></dd>
-
-
-  <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Parallel apply method; typically <code>mclapply</code> or <code>lapply</code>.</p></dd>
 
 
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -183,12 +185,12 @@
 <p>The forest construction is controlled by the <code>method</code> argument.
   By default, <code>method = "auto"</code> fits a random forest autoencoder,
   which regresses each selected variable on itself, a specialized form
-  of multivariate forest modeling. Alternatives include
-  <code>"unsupv"</code>, which uses pseudo-responses and multivariate splits
-  to build an unsupervised forest (Tang and Ishwaran, 2017), and
-  <code>"rnd"</code>, which uses completely random splits. For large datasets,
-  the autoencoder may be slower, while the <code>"unsupv"</code> and
-  <code>"rnd"</code> options are typically more computationally efficient.</p>
+  of multivariate forest modeling. Alternatives include <code>"unsupv"</code>,
+  which uses pseudo-responses and multivariate splits to build an
+  unsupervised forest (Tang and Ishwaran, 2017), and <code>"rnd"</code>, which
+  uses completely random splits. For large datasets, the autoencoder may
+  be slower, while <code>"unsupv"</code> and <code>"rnd"</code> are often much
+  faster.</p>
 <p>Variable importance is assessed using region-release contrasts formed
   by the forest. By default, the <code>importance</code> function returns
   an entropy-based criterion. This measure compares the variability
@@ -200,7 +202,7 @@
 <p>In addition to this default entropy measure, UVarPro supports custom
   user-defined entropy functions to create alternative importance
   metrics.</p>
-<p>A more sophisticated procedure, described in Zhou et al. (2025),
+<p>A more sophisticated procedure, described in Zhou et al. (2026),
   reframes each region-release contrast as a supervised classification
   task, with membership in the region serving as the class label.
   Variable effects are estimated using lasso-based logistic regression,
@@ -227,9 +229,9 @@
 
 <p>Tang F. and Ishwaran H. (2017).  Random forest missing data
   algorithms.  <em>Statistical Analysis and Data Mining</em>, 10:363-377.</p>
-<p>Zhou L., Lu M. and Ishwaran H. (2025).  Variable priority for
-  unsupervised variable selection.  PhD dissertation, University of
-  Miami.</p>
+<p>Zhou L., Lu M. and Ishwaran H. (2026).  Variable priority for
+  unsupervised variable selection.  <em>Pattern Recognition</em>,
+  172:112727.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>

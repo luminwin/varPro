@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -112,8 +112,7 @@
 <span>       local.std <span class="op">=</span> <span class="cn">TRUE</span>, zcut <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">2</span>, length <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>, nblocks <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>       split.weight <span class="op">=</span> <span class="cn">TRUE</span>, split.weight.method <span class="op">=</span> <span class="cn">NULL</span>, sparse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>       nodesize <span class="op">=</span> <span class="cn">NULL</span>, max.rules.tree <span class="op">=</span> <span class="fl">150</span>, max.tree <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">150</span>, <span class="va">ntree</span><span class="op">)</span>, </span>
-<span>       papply <span class="op">=</span> <span class="va">mclapply</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>       fast <span class="op">=</span> <span class="cn">FALSE</span>, crps <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>       verbose <span class="op">=</span> <span class="cn">FALSE</span>, seed <span class="op">=</span> <span class="cn">NULL</span>, fast <span class="op">=</span> <span class="cn">FALSE</span>, crps <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -177,10 +176,6 @@
 
   <dt id="arg-max-tree">max.tree<a class="anchor" aria-label="anchor" href="#arg-max-tree"></a></dt>
 <dd><p>Maximum number of trees used for rule extraction.</p></dd>
-
-
-  <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Apply function used for R parallelization.</p></dd>
 
 
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>

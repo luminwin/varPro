@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
       </span>
     </div>
 
@@ -113,7 +113,6 @@
 <span>  cutoff <span class="op">=</span> <span class="fl">0.79</span>, trim <span class="op">=</span> <span class="fl">0.1</span>, plot.it <span class="op">=</span> <span class="cn">FALSE</span>, conf <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  ylab <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="va">conf</span><span class="op">)</span> <span class="st">"Importance"</span> <span class="kw">else</span> <span class="st">"Standardized Importance"</span>,</span>
 <span>  <span class="va">max.rules.tree</span>, <span class="va">max.tree</span>,</span>
-<span>  papply <span class="op">=</span> <span class="va">mclapply</span>,</span>
 <span>  <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -164,10 +163,6 @@
 
   <dt id="arg-max-tree">max.tree<a class="anchor" aria-label="anchor" href="#arg-max-tree"></a></dt>
 <dd><p>Optional. Maximum number of trees used for rule extraction. Defaults to the value from the <code>varpro</code> object if unspecified.</p></dd>
-
-
-  <dt id="arg-papply">papply<a class="anchor" aria-label="anchor" href="#arg-papply"></a></dt>
-<dd><p>Apply method for parallelization; typically <code>mclapply</code> or <code>lapply</code>.</p></dd>
 
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
