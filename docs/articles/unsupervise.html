@@ -106,6 +106,7 @@
   </a>
 </li>
       </ul>
+
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -124,9 +125,10 @@
 <br><br> Lili Zhou (<a href="mailto:lxz516@miami.edu" class="email">lxz516@miami.edu</a>) <br><br> Aster Shear (<a href="mailto:aster.shear@gmail.com" class="email">aster.shear@gmail.com</a>) <br><br> Udaya B. Kogalur (<a href="mailto:ubk@kogalur.com" class="email">ubk@kogalur.com</a>) <br><br><a href="https://ishwaran.org/ishwaran.html" class="external-link">Hemant Ishwaran</a>
 (<a href="mailto:hemant.ishwaran@gmail.com" class="email">hemant.ishwaran@gmail.com</a>)</h4>
             
-            <h4 data-toc-skip class="date">2025-05-28</h4>
+            <h4 data-toc-skip class="date">2026-04-01</h4>
       
-
+      <small class="dont-index">Source: <a href="https://github.com/kogalur/varPro/blob/HEAD/vignettes/unsupervise.Rmd" class="external-link"><code>vignettes/unsupervise.Rmd</code></a></small>
+      <div class="hidden name"><code>unsupervise.Rmd</code></div>
 
     </div>
 
@@ -388,77 +390,30 @@ importance value. 2. An <code>entropy</code> list containing the
 <code>$entropy</code> output. This approach gives full control over the
 definition of importance scores.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">data</span>(BostonHousing, <span class="at">package =</span> <span class="st">"mlbench"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">uvarpro</span>(BostonHousing, <span class="at">ntree =</span> <span class="dv">3</span>, <span class="at">max.rules.tree =</span> <span class="dv">10</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">## convert original/release region into two-class problem</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="do">## define importance as the lasso beta values </span></span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="do">## For faster performance on Unix systems, consider using:</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="do">## library(parallel)</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="do">## imp &lt;- do.call(rbind, mclapply(seq_along(o$entropy), function(j) { ... }))</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(<span class="fu">seq_along</span>(o<span class="sc">$</span>entropy), <span class="cf">function</span>(j) {</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  rO <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, <span class="fu">lapply</span>(o<span class="sc">$</span>entropy[[j]], <span class="cf">function</span>(r) {</span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    xC <span class="ot">&lt;-</span> o<span class="sc">$</span>x[r[[<span class="dv">1</span>]],<span class="fu">names</span>(o<span class="sc">$</span>entropy),drop<span class="ot">=</span><span class="cn">FALSE</span>]</span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    xO <span class="ot">&lt;-</span> o<span class="sc">$</span>x[r[[<span class="dv">2</span>]],<span class="fu">names</span>(o<span class="sc">$</span>entropy),drop<span class="ot">=</span><span class="cn">FALSE</span>]</span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(xC)), <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">nrow</span>(xO))))</span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">rbind</span>(xC, xO)</span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    x <span class="ot">&lt;-</span> x[, <span class="fu">colnames</span>(x) <span class="sc">!=</span> <span class="fu">names</span>(o<span class="sc">$</span>entropy)[j]]</span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>    fit <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>      <span class="fu">suppressWarnings</span>(glmnet<span class="sc">::</span><span class="fu">cv.glmnet</span>(<span class="fu">as.matrix</span>(x), y, <span class="at">family =</span> <span class="st">"binomial"</span>)),</span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>      <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>    )</span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(fit)) {</span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>      beta <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">length</span>(o<span class="sc">$</span>entropy)), <span class="fu">names</span>(o<span class="sc">$</span>entropy))</span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>      bhat <span class="ot">&lt;-</span> <span class="fu">abs</span>(<span class="fu">coef</span>(fit)[<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>])</span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>      beta[<span class="fu">names</span>(bhat)] <span class="ot">&lt;-</span> bhat</span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>      beta</span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>      <span class="cn">NULL</span></span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>    }</span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>  }))</span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(rO)) {</span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>    val <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(rO, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>    <span class="fu">names</span>(val) <span class="ot">&lt;-</span> <span class="fu">colnames</span>(rO)</span>
-<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>    <span class="fu">return</span>(val)</span>
-<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
-<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>  }</span>
-<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="fu">setNames</span>(<span class="fu">names</span>(o<span class="sc">$</span>entropy)))</span>
-<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a></span>
-<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="fu">print</span>(imp)</span>
-<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a></span>
-<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a>           crim         zn       indus        nox        rm        dis         rad     ptratio</span>
-<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a>crim  <span class="fl">0.0000000</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span>  <span class="fl">0.5186556</span> <span class="fl">0.0000000</span> <span class="fl">0.04332184</span> <span class="fl">0.119731180</span> <span class="fl">0.000000000</span></span>
-<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a>zn    <span class="fl">8.3120410</span> <span class="fl">0.00000000</span> <span class="fl">0.115124727</span> <span class="fl">33.6707767</span> <span class="fl">0.0000000</span> <span class="fl">0.03767438</span> <span class="fl">0.008917331</span> <span class="fl">0.000000000</span></span>
-<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a>indus <span class="fl">0.4843001</span> <span class="fl">0.08755108</span> <span class="fl">0.000000000</span> <span class="fl">25.0019427</span> <span class="fl">0.9215305</span> <span class="fl">0.81272780</span> <span class="fl">0.192673483</span> <span class="fl">0.001807552</span></span>
-<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>nox   <span class="fl">0.7031151</span> <span class="fl">0.01256135</span> <span class="fl">0.197637889</span>  <span class="fl">0.0000000</span> <span class="fl">0.1103938</span> <span class="fl">1.48287678</span> <span class="fl">0.559274899</span> <span class="fl">0.186624787</span></span>
-<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a>dis   <span class="fl">0.0000000</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span> <span class="fl">15.4727857</span> <span class="fl">0.0000000</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span> <span class="fl">0.000000000</span></span>
-<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a>rad   <span class="fl">5.2414764</span> <span class="fl">0.00000000</span> <span class="fl">1.189979771</span>  <span class="fl">2.7000874</span> <span class="fl">0.0000000</span> <span class="fl">0.77578291</span> <span class="fl">0.000000000</span> <span class="fl">0.712066509</span></span>
-<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a>lstat <span class="fl">0.5619712</span> <span class="fl">0.00000000</span> <span class="fl">0.005360787</span>  <span class="fl">0.7473822</span> <span class="fl">1.2940632</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span> <span class="fl">0.000000000</span></span>
-<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a>medv  <span class="fl">0.0000000</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span>  <span class="fl">0.0000000</span> <span class="fl">2.9693986</span> <span class="fl">0.00000000</span> <span class="fl">0.000000000</span> <span class="fl">0.298883360</span></span>
-<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a>           lstat       medv</span>
-<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a>crim  <span class="fl">0.02642667</span> <span class="fl">0.00000000</span></span>
-<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a>zn    <span class="fl">0.00000000</span> <span class="fl">0.00000000</span></span>
-<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>indus <span class="fl">0.01050727</span> <span class="fl">0.00000000</span></span>
-<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a>nox   <span class="fl">0.03387207</span> <span class="fl">0.02638144</span></span>
-<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a>dis   <span class="fl">0.00000000</span> <span class="fl">0.00000000</span></span>
-<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>rad   <span class="fl">0.01790731</span> <span class="fl">0.02322370</span></span>
-<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a>lstat <span class="fl">0.00000000</span> <span class="fl">0.05517093</span></span>
-<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a>medv  <span class="fl">0.12894740</span> <span class="fl">0.00000000</span></span></code></pre></div>
-<p>In the above examples, the
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>o <span class="ot">&lt;-</span> <span class="fu">uvarpro</span>(BostonHousing[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), ])</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">get.beta.entropy</span>(o)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="fu">print</span>(beta[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>              crim         zn     indus         nox        rm</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>crim  <span class="fl">0.0000000000</span> <span class="fl">0.10040957</span> <span class="fl">1.0045794</span>  <span class="fl">3.79113503</span> <span class="fl">0.2526244</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>zn    <span class="fl">0.2941171442</span> <span class="fl">0.00000000</span> <span class="fl">1.2070505</span> <span class="fl">11.04463518</span> <span class="fl">0.8142999</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>indus <span class="fl">0.3386272960</span> <span class="fl">1.13606934</span> <span class="fl">0.0000000</span>  <span class="fl">7.88050758</span> <span class="fl">1.3338613</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>nox   <span class="fl">0.9156186492</span> <span class="fl">0.64743152</span> <span class="fl">1.5504832</span>  <span class="fl">0.00000000</span> <span class="fl">0.9111166</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>rm    <span class="fl">0.0001214442</span> <span class="fl">0.05192334</span> <span class="fl">0.1060687</span>  <span class="fl">0.02870288</span> <span class="fl">0.0000000</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="fu">sdependent</span>(beta)</span></code></pre></div>
+<p><img src="pic/fig-core-uvarpro-sdependent.jpg" style="width:60.0%"></p>
+<p>In the above example of function <code>get.beta.entropy</code>, the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>th
 row serves as a ensembled regression model, representing the importance
 scores for the
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>th
-variable.</p>
+variable. The function <code>sdependent</code> provides S-dependence map
+of the L1-logistic coefficient matrix — reveals variable dependence
+structure without labels.</p>
 <p class="comment">
 For large datasets, consider using <code><a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a></code> to
 improve computation time.
-</p>
-<p class="comment">
-Users can also use the fast built in hidden lasso-beta entropy function:
-<code>varPro:::get.beta.entropy(o)</code>.
 </p>
 <table class="table">
 <colgroup><col width="100%"></colgroup>
@@ -477,79 +432,19 @@ control.</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section level2">
-<h2 id="clusterpro-for-unsupervised-data-visualization">ClusterPro for Unsupervised Data Visualization<a class="anchor" aria-label="anchor" href="#clusterpro-for-unsupervised-data-visualization"></a>
-</h2>
-<p>VarPro includes a powerful tool for unsupervised data
-visualization.</p>
-<p>For each VarPro rule, a two-class analysis is performed by comparing
-the rule-defined region to its complementary region. This analysis
-produces regression coefficients that highlight variables most
-associated with the release variable.</p>
-<p>These coefficients are then used to scale the centroids of the two
-regions. By saving all such pairs of scaled centroids, VarPro constructs
-an enhanced learning dataset specific to the release variable.</p>
-<p>You can then apply standard visualization tools (e.g., PCA, t-SNE,
-UMAP) to this enhanced dataset to explore complex relationships and
-structures in the data.</p>
-<div class="section level3">
-<h3 id="example-of-4-cluster-simulation">Example of 4-cluster simulation<a class="anchor" aria-label="anchor" href="#example-of-4-cluster-simulation"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="http://www.stats.ox.ac.uk/pub/MASS4/" class="external-link">"MASS"</a></span>, logical.return<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span></span>
-<span></span>
-<span><span class="va">fourcsim</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">=</span><span class="fl">500</span>, <span class="va">sigma</span><span class="op">=</span><span class="fl">2</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  </span>
-<span>  <span class="va">cl1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">sigma</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">cl2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">0</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">sigma</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">cl3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="op">-</span><span class="fl">4</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">sigma</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">cl4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/MASS/man/mvrnorm.html" class="external-link">mvrnorm</a></span><span class="op">(</span><span class="va">n</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>,<span class="fl">0</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">sigma</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">dta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">cl1</span>,<span class="va">cl2</span>,<span class="va">cl3</span>,<span class="va">cl4</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">dta</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>,<span class="st">"y"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">dta</span>, noise<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="fl">4</span><span class="op">)</span><span class="op">*</span><span class="fl">20</span><span class="op">)</span>,ncol<span class="op">=</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">d4c</span> <span class="op">&lt;-</span> <span class="fu">fourcsim</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">o4c</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpro.varpro.html">clusterpro</a></span><span class="op">(</span><span class="va">d4c</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>;<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">o4c</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
-<span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p><img src="pic/clustsim.png" style="width:60.0%"></p>
-</div>
-<div class="section level3">
-<h3 id="example-of-real-data">Example of real data<a class="anchor" aria-label="anchor" href="#example-of-real-data"></a>
-</h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Glass</span>, package <span class="op">=</span> <span class="st">"mlbench"</span><span class="op">)</span></span>
-<span><span class="va">dg</span> <span class="op">&lt;-</span> <span class="va">Glass</span></span>
-<span></span>
-<span><span class="co">## with class label</span></span>
-<span><span class="va">og</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpro.varpro.html">clusterpro</a></span><span class="op">(</span><span class="va">dg</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>;<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">og</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span></code></pre></div>
-<p><img src="pic/glass2.png" style="width:60.0%"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## without class label</span></span>
-<span><span class="va">dgU</span> <span class="op">&lt;-</span> <span class="va">Glass</span>; <span class="va">dgU</span><span class="op">$</span><span class="va">Type</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
-<span><span class="va">ogU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clusterpro.varpro.html">clusterpro</a></span><span class="op">(</span><span class="va">dgU</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>;<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ogU</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></code></pre></div>
-<p><img src="pic/glass3.png" style="width:60.0%"></p>
 <p class="comment2">
 <strong> Cite this vignette as </strong> <br> M. Lu, L. Zhou, A.
 Shear, U. B. Kogalur, and H. Ishwaran. 2024. “varPro: variable selection
 for unsupervised problems vignette.” <a href="http://www.varprotools.org/articles/unsupervise.html" class="external-link uri">http://www.varprotools.org/articles/unsupervise.html</a>.
 </p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="sc">@</span>misc{HemantInstall,</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>    author <span class="ot">=</span> <span class="st">"Min Lu and Lili Zhou and Aster Shear and Udaya B. Kogalur and Hemant Ishwaran"</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    title <span class="ot">=</span> {{varPro}<span class="sc">:</span> variable selection <span class="cf">for</span> unsupervised problems vignette},</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>    year <span class="ot">=</span> {<span class="dv">2024</span>},</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    url <span class="ot">=</span> {http<span class="sc">:</span><span class="er">//</span>www.varprotools.org<span class="sc">/</span>articles<span class="sc">/</span>unsupervise.html},</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    howpublished <span class="ot">=</span> <span class="st">"\url{http://www.varprotools.org/articles/unsupervise.html}"</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    note <span class="ot">=</span> <span class="st">"[accessed date]"</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>}</span></code></pre></div>
-</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="sc">@</span>misc{HemantInstall,</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>    author <span class="ot">=</span> <span class="st">"Min Lu and Lili Zhou and Aster Shear and Udaya B. Kogalur and Hemant Ishwaran"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    title <span class="ot">=</span> {{varPro}<span class="sc">:</span> variable selection <span class="cf">for</span> unsupervised problems vignette},</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>    year <span class="ot">=</span> {<span class="dv">2024</span>},</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    url <span class="ot">=</span> {http<span class="sc">:</span><span class="er">//</span>www.varprotools.org<span class="sc">/</span>articles<span class="sc">/</span>unsupervise.html},</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    howpublished <span class="ot">=</span> <span class="st">"\url{http://www.varprotools.org/articles/unsupervise.html}"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>    note <span class="ot">=</span> <span class="st">"[accessed date]"</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>}</span></code></pre></div>
 </div>
   </div>
 
