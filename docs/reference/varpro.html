@@ -24,7 +24,7 @@ for Regression, Multivariate Regression, Classification and Survival."><meta pro
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
       </span>
     </div>
 
@@ -110,7 +110,7 @@ for Regression, Multivariate Regression, Classification and Survival.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">data</span>, nvar <span class="op">=</span> <span class="fl">30</span>, ntree <span class="op">=</span> <span class="fl">500</span>, </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">varpro</span><span class="op">(</span><span class="va">formula</span>, <span class="va">data</span>, nvar <span class="op">=</span> <span class="fl">30</span>, ntree <span class="op">=</span> <span class="fl">500</span>, </span>
 <span>       split.weight <span class="op">=</span> <span class="cn">TRUE</span>, split.weight.method <span class="op">=</span> <span class="cn">NULL</span>, sparse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>       nodesize <span class="op">=</span> <span class="cn">NULL</span>, max.rules.tree <span class="op">=</span> <span class="fl">150</span>, max.tree <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">150</span>, <span class="va">ntree</span><span class="op">)</span>,</span>
 <span>       parallel <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fu"><a href="utilities_internal.html">get.mc.cores</a></span><span class="op">(</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, seed <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -121,7 +121,7 @@ for Regression, Multivariate Regression, Classification and Survival.</p>
 
 
 <p></p>
-<dl><dt id="arg-f">f<a class="anchor" aria-label="anchor" href="#arg-f"></a></dt>
+<dl><dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>
 <dd><p>Formula specifying the model to be fit.</p></dd>
 
 
@@ -274,17 +274,29 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
     </div>
     <div id="references">
     <h2>References</h2>
-    <p>Lu, M. and Ishwaran, H. (2024). Model-independent variable selection
+
+
+<p>Ishwaran H. (2025). <em>Multivariate Statistics: Classical Foundations and
+  Modern Machine Learning</em>.  Chapman and Hall/CRC.</p>
+<p>Ishwaran H. and Blackstone E.H. (2025).  Harnessing the power of
+  virtual (digital) twins: Graphical causal tools for understanding
+  patient and hospital differences. <em>Computational and Structural
+    Biotechnology Journal</em>, 28:312.</p>
+<p>Lu, M. and Ishwaran, H. (2024). Model-independent variable selection
   via the rule-based variable priority. arXiv e-prints, pp.arXiv-2409.</p>
-<p>O'Brien R. and Ishwaran H. (2019).  A random forests quantile
-  classifier for class imbalanced data. <em>Pattern Recognition</em>,
-  90, 232-249.</p>
+<p>Lu, M. and Ishwaran, H. (2025). Individual variable priority: a
+  model-independent local gradient method for variable importance.
+  <em>Artificial Intelligence Review</em>, 58:407.</p>
+<p>Zhou L., Lu M. and Ishwaran H. (2026).  Variable priority for
+  unsupervised variable selection.  <em>Pattern Recognition</em>,
+  172:112727.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code class="command"><a href="alzheimers.html">alzheimers</a></code>
   <code class="command"><a href="cv.varpro.html">cv.varpro</a></code>
   <code class="command"><a href="glioma.html">glioma</a></code>
+  <code class="command"><a href="hrrecov.html">hrrecov</a></code>
   <code class="command"><a href="importance.varpro.html">importance.varpro</a></code>
   <code class="command"><a href="partialpro.html">partialpro</a></code>
   <code class="command"><a href="predict.varpro.html">predict.varpro</a></code>
@@ -428,6 +440,14 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">}</span></span>
+<span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span><span class="co">## multiclass example: wine data </span></span>
+<span><span class="co">## ------------------------------------------------------------</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">wine</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
+<span><span class="va">wine</span><span class="op">$</span><span class="va">quality</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">wine</span><span class="op">$</span><span class="va">quality</span><span class="op">)</span></span>
+<span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">quality</span><span class="op">~</span><span class="va">.</span>, <span class="va">wine</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## survival example: pbc </span></span>

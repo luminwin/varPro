@@ -27,7 +27,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
       </span>
     </div>
 
@@ -129,7 +129,9 @@
 <span>        use.loo <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        use.abs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>        path.store.membership <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>        keep.data <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>        save.data <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        save.model <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        scale <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"local"</span>, <span class="st">"global"</span>, <span class="st">"none"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -244,13 +246,29 @@
   case IDs) in the returned object for later ladder/band calculations?
   Setting <code>FALSE</code> can substantially reduce memory usage when the
   number of rules is large, but disables ladder-based bands in
-  <code><a href="utilities_internal.html">partial.ivarpro()</a></code> and prevents <code>ivarpro_band()</code> from being
+  <code><a href="partial.ivarpro.html">partial.ivarpro()</a></code> and prevents <code>ivarpro_band()</code> from being
   used. Default is <code>TRUE</code>.</p></dd>
 
 
-<dt id="arg-keep-data">keep.data<a class="anchor" aria-label="anchor" href="#arg-keep-data"></a></dt>
+  <dt id="arg-save-data">save.data<a class="anchor" aria-label="anchor" href="#arg-save-data"></a></dt>
 <dd><p>Save the x and y data (default is <code>TRUE</code>)?  Used
   for downstream plots.</p></dd>
+
+
+  <dt id="arg-save-model">save.model<a class="anchor" aria-label="anchor" href="#arg-save-model"></a></dt>
+<dd><p>Save the original object (default is <code>TRUE</code>)?  Used
+  for <code>predict.ivarpro</code> to obtain gradient values of test data.</p></dd>
+
+
+  <dt id="arg-scale">scale<a class="anchor" aria-label="anchor" href="#arg-scale"></a></dt>
+<dd><p>Character. Controls how the local slope is scaled when
+  forming the rule-level gradient. <code>"local"</code> (default) uses the
+  neighborhood-based standardization described in Lu and Ishwaran(
+  2025).  <code>"global"</code> uses a fixed global scale (the overall
+  standard deviation of the predictor in the training data) rather than
+  a neighborhood-specific scale. <code>"none"</code> returns the unscaled
+  slope in the original predictor units (or the unscaled finite
+  difference for binary 0/1 release variables).</p></dd>
 
 
 </dl></div>
@@ -279,6 +297,22 @@ released region, and the resulting slope is used as a local,
 gradient-based priority score. Case-specific scores are obtained by
 aggregating the relevant rule-level gradients over the rules that apply
 to each case.</p>
+<p><strong>Scaling / standardization.</strong>
+By default, iVarPro reports a <em>standardized</em> local gradient: the local
+linear regression is fit using a standardized release coordinate so that
+<code>cut = 1</code> corresponds to one standard deviation of the release variable
+within the released region. This yields a dimensionless effect-size interpretation
+and helps make iVarPro values comparable across predictors with different units
+and variability (see Section~2.6 of Lu and Ishwaran, 2025).
+The argument <code>scale</code> controls how this scaling is applied:
+<code>"local"</code> uses the neighborhood-specific scale (default),
+<code>"global"</code> uses a fixed global scale for the predictor (overall SD in the
+training data), and <code>"none"</code> returns the unscaled slope in the original
+predictor units (or the unscaled finite-difference for binary 0/1 release variables).
+When using iVarPro-derived gradients for interaction screening, comparing results
+across <code>scale</code> settings can help distinguish structural interactions in the
+prediction surface from scale-induced modulation due to neighborhood-dependent
+standardization.</p>
 <p><strong>Neighborhood size and <code>cut.max</code>.</strong>
 For continuous release variables, the size of the local neighborhood
 used for slope estimation is controlled by <code>cut</code> (constructed from
@@ -342,6 +376,10 @@ particular:</p>
 <dd><p>The interior values of <code>cut</code> (excluding the
     endpoints) used for the cut.max ladder path.</p></dd>
 
+  <dt><code>scale</code></dt>
+<dd><p>The scaling option used to compute rule-level gradients
+      (<code>"local"</code>, <code>"global"</code>, or <code>"none"</code>).</p></dd>
+
   <dt><code>rule.imp.ladder</code></dt>
 <dd><p>A numeric matrix of dimension \(R \times L\)
     storing rule-level gradients selected under each ladder truncation, where
@@ -353,8 +391,8 @@ particular:</p>
 
   <dt><code>oobMembership</code></dt>
 <dd><p>Optional list (length \(R\)) giving the OOB
-    membership indices for each retained rule; included only when
-    <code>path.store.membership = TRUE</code>.</p></dd>
+    comparison/released membership indices for each retained rule;
+    included only when <code>path.store.membership = TRUE</code>.</p></dd>
 
 
 </dl><p>Additional tuning flags and rule metadata (e.g., <code>use.loo</code>,
@@ -377,7 +415,8 @@ diagnostics.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="varpro.html">varpro</a></code></p></div>
+    <div class="dont-index"><p><code><a href="varpro.html">varpro</a></code>
+  <code><a href="partial.ivarpro.html">partial.ivarpro</a></code></p></div>
     </div>
 
     <div id="ref-examples">
@@ -448,18 +487,24 @@ diagnostics.</p>
 <span></span>
 <span><span class="co">## ivarpro analysis </span></span>
 <span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">vp</span><span class="op">)</span></span>
+<span><span class="co">## ivarpro analysis using a fixed global scale (optional)</span></span>
+<span><span class="va">imp.global</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">vp</span>, scale <span class="op">=</span> <span class="st">"global"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## ivarpro analysis returning unscaled slopes (optional)</span></span>
+<span><span class="va">imp.none</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">vp</span>, scale <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
+<span></span>
 <span></span>
 <span><span class="co">## partial plot of x2 </span></span>
-<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## partial plot of x2 without ladder band</span></span>
-<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## optional: use only a subset of ladder cuts</span></span>
-<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">TRUE</span>, ladder.cuts<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
+<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">TRUE</span>, ladder.cuts<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## partial plot with color/size using x1 (color) and y (size)</span></span>
-<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, col.var<span class="op">=</span><span class="st">"x1"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, col.var<span class="op">=</span><span class="st">"x1"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">##</span></span>
@@ -470,15 +515,16 @@ diagnostics.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">peakVO2</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## varpro/importance call</span></span>
-<span><span class="va">i.pv</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">ttodead</span>, <span class="va">died</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">peakVO2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">vp</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">ttodead</span>, <span class="va">died</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">peakVO2</span><span class="op">)</span></span>
+<span><span class="va">ivp</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">vp</span>, adaptive <span class="op">=</span> <span class="cn">FALSE</span>, cut.max <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## partial plot of peak vo2</span></span>
 <span><span class="co">## color displays interval (a measure of exercise time)</span></span>
 <span><span class="co">## size displays "y" which is predicted mortality in survival</span></span>
-<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">i.pv</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"interval"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">ivp</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"interval"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## same but using beta blockers for color</span></span>
-<span><span class="fu"><a href="utilities_internal.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">i.pv</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"betablok"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">ivp</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"betablok"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># }</span></span></code></pre></div>
     </div>
