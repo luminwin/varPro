@@ -24,7 +24,7 @@ for Regression, Multivariate Regression, Classification and Survival."><meta pro
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.0</span>
       </span>
     </div>
 
@@ -297,7 +297,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
   <code class="command"><a href="cv.varpro.html">cv.varpro</a></code>
   <code class="command"><a href="glioma.html">glioma</a></code>
   <code class="command"><a href="hrrecov.html">hrrecov</a></code>
-  <code class="command"><a href="importance.varpro.html">importance.varpro</a></code>
+  <code class="command"><a href="importance.html">importance.varpro</a></code>
   <code class="command"><a href="partialpro.html">partialpro</a></code>
   <code class="command"><a href="predict.varpro.html">predict.varpro</a></code>
   <code class="command"><a href="isopro.html">isopro</a></code>
@@ -326,7 +326,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">iris</span>, max.tree <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## call the importance function and print the results</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## regression example: boston housing</span></span>
@@ -339,7 +339,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>, <span class="va">BostonHousing</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## extract and print importance values</span></span>
-<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span></span>
+<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">imp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## another way to extract and print importance values</span></span>
@@ -347,7 +347,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="utilities_internal.html">get.vimp</a></span><span class="op">(</span><span class="va">o</span>, pretty <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## plot importance values</span></span>
-<span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span>, plot.it <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span>, plot.it <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## regression example: boston housing illustrating hot-encoding</span></span>
@@ -365,7 +365,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="va">Boston</span><span class="op">$</span><span class="va">rm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">Boston</span><span class="op">$</span><span class="va">rm</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## call varpro and print the importance</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>, <span class="va">Boston</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>, <span class="va">Boston</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## get top variables</span></span>
 <span><span class="fu"><a href="utilities_internal.html">get.topvars</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span></span>
@@ -381,7 +381,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu">mlbench</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.friedman1.html" class="external-link">mlbench.friedman1</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## example without guided tree-splitting</span></span>
@@ -389,7 +389,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu">mlbench</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mlbench/man/mlbench.friedman2.html" class="external-link">mlbench.friedman2</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>            nodesize <span class="op">=</span> <span class="fl">10</span>, split.weight <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## regression example: all noise</span></span>
@@ -398,7 +398,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span> <span class="op">*</span> <span class="fl">50</span><span class="op">)</span>, <span class="fl">100</span>, <span class="fl">50</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span>, x <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## multivariate regression example: boston housing</span></span>
@@ -407,10 +407,10 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">BostonHousing</span>, package <span class="op">=</span> <span class="st">"mlbench"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## using rfsrc multivariate formula call</span></span>
-<span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="fu">Multivar</span><span class="op">(</span><span class="va">lstat</span>, <span class="va">nox</span><span class="op">)</span> <span class="op">~</span><span class="va">.</span>, <span class="va">BostonHousing</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="fu">Multivar</span><span class="op">(</span><span class="va">lstat</span>, <span class="va">nox</span><span class="op">)</span> <span class="op">~</span><span class="va">.</span>, <span class="va">BostonHousing</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## using cbind multivariate formula call</span></span>
-<span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">lstat</span>, <span class="va">nox</span><span class="op">)</span> <span class="op">~</span><span class="va">.</span>, <span class="va">BostonHousing</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">lstat</span>, <span class="va">nox</span><span class="op">)</span> <span class="op">~</span><span class="va">.</span>, <span class="va">BostonHousing</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">##----------------------------------------------------------------</span></span>
 <span><span class="co">##  class imbalanced problem </span></span>
@@ -437,7 +437,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span>  <span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, <span class="op">]</span></span>
 <span></span>
 <span>  <span class="co">## varpro call</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">d</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">}</span></span>
 <span></span>
@@ -447,14 +447,14 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">wine</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span><span class="va">wine</span><span class="op">$</span><span class="va">quality</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">wine</span><span class="op">$</span><span class="va">quality</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">quality</span><span class="op">~</span><span class="va">.</span>, <span class="va">wine</span><span class="op">)</span> </span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## survival example: pbc </span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## pbc survival with rmst (restricted mean survival time)</span></span>
@@ -462,7 +462,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span>, rmst <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## pbc survival with rmst vector</span></span>
@@ -470,14 +470,14 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pbc</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">days</span>, <span class="va">status</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">pbc</span>, rmst <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## survival example with more variables</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">peakVO2</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">ttodead</span>, <span class="va">died</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">peakVO2</span><span class="op">)</span></span>
-<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span>, plot.it <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span>, plot.it <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">imp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
@@ -485,14 +485,14 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vdv</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">vdv</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## high dimensional survival example without sparse option</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">vdv</span>, package <span class="op">=</span> <span class="st">"randomForestSRC"</span><span class="op">)</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">vdv</span>, sparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ----------------------------------------------------------------------</span></span>
 <span><span class="co">## high dimensional survival example using different split-weight methods</span></span>
@@ -501,13 +501,13 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html" class="external-link">as.formula</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/survival/man/Surv.html" class="external-link">Surv</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Censoring</span><span class="op">)</span><span class="op">~</span><span class="va">.</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## lasso only</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## lasso and vimp</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso vimp"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso vimp"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## lasso, vimp and shallow trees</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso vimp tree"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="fu">varpro</span><span class="op">(</span><span class="va">f</span>, <span class="va">vdv</span>, split.weight.method <span class="op">=</span> <span class="st">"lasso vimp tree"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## largish data (iowa housing data)</span></span>
@@ -521,7 +521,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span></span>
 <span><span class="co">## varpro call</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">SalePrice</span><span class="op">~</span><span class="va">.</span>, <span class="va">dta</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">## large data: illustrates different ways to improve speed</span></span>
@@ -533,12 +533,12 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span></span>
 <span><span class="co">## use large nodesize</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, <span class="va">d</span>, ntree <span class="op">=</span> <span class="fl">100</span>, nodesize <span class="op">=</span> <span class="fl">200</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## use large nodesize, smaller bootstrap </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">.</span>, <span class="va">d</span>, ntree <span class="op">=</span> <span class="fl">100</span>, nodesize <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>           sampsize <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
@@ -577,7 +577,7 @@ can be overridden via the hidden option <code>use.rfq</code>.</p>
 <span><span class="co">## call varpro with the custom split-weights</span></span>
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">varpro</span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>,<span class="va">Boston</span>,split.weight.custom<span class="op">=</span><span class="va">swt</span>,verbose<span class="op">=</span><span class="cn">TRUE</span>,sparse<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"varpro result\n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.varpro.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="importance.html">importance</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="utilities_internal.html">get.vimp</a></span><span class="op">(</span><span class="va">o</span>, pretty<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="utilities_internal.html">get.orgvimp</a></span><span class="op">(</span><span class="va">o</span>, pretty<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>

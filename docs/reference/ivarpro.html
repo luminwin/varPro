@@ -27,7 +27,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.0</span>
       </span>
     </div>
 
@@ -246,7 +246,7 @@
   case IDs) in the returned object for later ladder/band calculations?
   Setting <code>FALSE</code> can substantially reduce memory usage when the
   number of rules is large, but disables ladder-based bands in
-  <code><a href="partial.ivarpro.html">partial.ivarpro()</a></code> and prevents <code>ivarpro_band()</code> from being
+  <code><a href="plot.ivarpro.html">plot.ivarpro()</a></code> and prevents <code>ivarpro_band()</code> from being
   used. Default is <code>TRUE</code>.</p></dd>
 
 
@@ -416,7 +416,7 @@ diagnostics.</p>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="varpro.html">varpro</a></code>
-  <code><a href="partial.ivarpro.html">partial.ivarpro</a></code></p></div>
+  <code><a href="plot.ivarpro.html">plot.ivarpro</a></code></p></div>
     </div>
 
     <div id="ref-examples">
@@ -447,7 +447,7 @@ diagnostics.</p>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">##</span></span>
-<span><span class="co">## synthetic regression example with partial plot</span></span>
+<span><span class="co">## synthetic regression example with plot</span></span>
 <span><span class="co">##</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
@@ -494,21 +494,21 @@ diagnostics.</p>
 <span><span class="va">imp.none</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">vp</span>, scale <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="co">## partial plot of x2 </span></span>
-<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span><span class="op">)</span></span>
+<span><span class="co">## plot of x2 </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## partial plot of x2 without ladder band</span></span>
-<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">## plot of x2 without ladder band</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## optional: use only a subset of ladder cuts</span></span>
-<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">TRUE</span>, ladder.cuts<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, ladder<span class="op">=</span><span class="cn">TRUE</span>, ladder.cuts<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## partial plot with color/size using x1 (color) and y (size)</span></span>
-<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, col.var<span class="op">=</span><span class="st">"x1"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span><span class="co">## plot with color/size using x1 (color) and y (size)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">imp</span>, var<span class="op">=</span><span class="st">"x2"</span>, col.var<span class="op">=</span><span class="st">"x1"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span><span class="co">##</span></span>
-<span><span class="co">## survival example with partial plot</span></span>
+<span><span class="co">## survival example with plot</span></span>
 <span><span class="co">##</span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
 <span></span>
@@ -518,13 +518,13 @@ diagnostics.</p>
 <span><span class="va">vp</span> <span class="op">&lt;-</span> <span class="fu"><a href="varpro.html">varpro</a></span><span class="op">(</span><span class="fu">Surv</span><span class="op">(</span><span class="va">ttodead</span>, <span class="va">died</span><span class="op">)</span><span class="op">~</span><span class="va">.</span>, <span class="va">peakVO2</span><span class="op">)</span></span>
 <span><span class="va">ivp</span> <span class="op">&lt;-</span> <span class="fu">ivarpro</span><span class="op">(</span><span class="va">vp</span>, adaptive <span class="op">=</span> <span class="cn">FALSE</span>, cut.max <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## partial plot of peak vo2</span></span>
+<span><span class="co">## plot of peak vo2</span></span>
 <span><span class="co">## color displays interval (a measure of exercise time)</span></span>
 <span><span class="co">## size displays "y" which is predicted mortality in survival</span></span>
-<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">ivp</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"interval"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ivp</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"interval"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## same but using beta blockers for color</span></span>
-<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">ivp</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"betablok"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ivp</span>, var<span class="op">=</span><span class="st">"peak.vo2"</span>, col.var<span class="op">=</span><span class="st">"betablok"</span>, size.var<span class="op">=</span><span class="st">"y"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># }</span></span></code></pre></div>
     </div>

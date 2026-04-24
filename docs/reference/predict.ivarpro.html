@@ -27,7 +27,7 @@ Calculates case-specific iVarPro gradients on a new feature matrix by
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.0</span>
       </span>
     </div>
 
@@ -116,13 +116,14 @@ Calculates case-specific iVarPro gradients on a new feature matrix by
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">predict.ivarpro</span><span class="op">(</span><span class="va">object</span>,</span>
-<span>              newdata <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>              model <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>              noise.na <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>              path.store.membership <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>              save.data <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>              <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'ivarpro'</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  model <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  noise.na <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  path.store.membership <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  save.data <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -166,7 +167,7 @@ Calculates case-specific iVarPro gradients on a new feature matrix by
 <dd><p>Logical. If <code>TRUE</code>, store the rule
     membership indices (case IDs) for the prediction in <code>attr(out,
     "ivarpro.path")$oobMembership</code>. This enables ladder-based bands in
-    <code><a href="partial.ivarpro.html">partial.ivarpro</a></code> and summaries via
+    <code><a href="plot.ivarpro.html">plot.ivarpro</a></code> and summaries via
     <code>ivarpro_band()</code> for the predicted gradients, at the cost of
     additional memory. Default is <code>FALSE</code>.</p></dd>
 
@@ -175,7 +176,7 @@ Calculates case-specific iVarPro gradients on a new feature matrix by
 <dd><p>Logical. If <code>TRUE</code> (default) and <code>newdata</code>
     is supplied, save the predictor data used for prediction as
     <code>attr(out, "data")</code>, enabling downstream plotting functions
-    (e.g., <code><a href="partial.ivarpro.html">partial.ivarpro</a></code>) to retrieve <code>x</code>
+    (e.g., <code><a href="plot.ivarpro.html">plot.ivarpro</a></code>) to retrieve <code>data</code>
     automatically.</p></dd>
 
 
@@ -199,15 +200,15 @@ the case's terminal node to the stored rule node/branch ID for that
 tree. Case-specific gradients are then computed by aggregating the
 stored rule-level gradients over all rules that apply to the case and
 release the corresponding variable.</p>
-<p>When <code>newdata</code> is not supplied, <code>predict.ivarpro()</code> attempts
+<p>When <code>newdata</code> is not supplied, <code><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict()</a></code> attempts
 to return OOB case-specific gradients for the original training
 data. When the iVarPro object was created with membership information
 stored in its path (<code>path.store.membership = TRUE</code>, the default for
 <code><a href="ivarpro.html">ivarpro()</a></code>), the restore prediction will reproduce the original
 iVarPro matrix.</p>
 <p>If <code>save.data = TRUE</code> and <code>newdata</code> is supplied,
-<code>attr(out,"data")</code> contains the predictor matrix used for
-prediction, so downstream wrappers such as <code><a href="partial.ivarpro.html">partial.ivarpro</a></code>
+<code>attr(out, "data")</code> contains the predictor matrix used for
+prediction, so downstream wrappers such as <code><a href="plot.ivarpro.html">plot.ivarpro</a></code>
 can be used directly. If you want ladder bands on predicted gradients,
 set <code>path.store.membership = TRUE</code> when predicting.</p>
     </div>
@@ -228,7 +229,7 @@ indices.</p>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="ivarpro.html">ivarpro</a></code>,
-  <code><a href="partial.ivarpro.html">partial.ivarpro</a></code>,
+  <code><a href="plot.ivarpro.html">plot.ivarpro</a></code>,
   <code><a href="varpro.html">varpro</a></code></p></div>
     </div>
 
@@ -249,12 +250,13 @@ indices.</p>
 <span><span class="va">imp</span> <span class="op">&lt;-</span> <span class="fu"><a href="ivarpro.html">ivarpro</a></span><span class="op">(</span><span class="va">vp</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Restore prediction: should match the original iVarPro matrix</span></span>
-<span><span class="va">p.restore</span> <span class="op">&lt;-</span> <span class="fu">predict.ivarpro</span><span class="op">(</span><span class="va">imp</span><span class="op">)</span></span>
+<span><span class="va">p.restore</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">imp</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">p.restore</span>, <span class="va">imp</span>, check.attributes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Downstream wrapper: partial plot using the restored gradients</span></span>
-<span><span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">p.restore</span>, var <span class="op">=</span> <span class="st">"peak.vo2"</span>,</span>
-<span>    col.var <span class="op">=</span> <span class="st">"interval"</span>, size.var <span class="op">=</span> <span class="st">"y"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">imp</span>, <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">## Downstream plotting using the restored gradients</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p.restore</span>, var <span class="op">=</span> <span class="st">"peak.vo2"</span>,</span>
+<span>     col.var <span class="op">=</span> <span class="st">"interval"</span>, size.var <span class="op">=</span> <span class="st">"y"</span>,</span>
+<span>     data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">imp</span>, <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co">## ------------------------------------------------------------</span></span>
@@ -282,10 +284,10 @@ indices.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">te</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co">## predicted gradients on test data</span></span>
-<span>  <span class="va">p.test</span> <span class="op">&lt;-</span> <span class="fu">predict.ivarpro</span><span class="op">(</span><span class="va">imp</span>, newdata <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
+<span>  <span class="va">p.test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">imp</span>, newdata <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co">## partial plot directly on predicted object</span></span>
-<span>  <span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">p.test</span>, var <span class="op">=</span> <span class="st">"x1"</span>, col.var <span class="op">=</span> <span class="st">"x2"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p.test</span>, var <span class="op">=</span> <span class="st">"x1"</span>, col.var <span class="op">=</span> <span class="st">"x2"</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span>  <span class="co">## push x1 outside the original Friedman support [0, 1]</span></span>
@@ -293,12 +295,12 @@ indices.</p>
 <span>  <span class="va">test.ood</span> <span class="op">&lt;-</span> <span class="va">test</span></span>
 <span>  <span class="va">test.ood</span><span class="op">$</span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">test</span><span class="op">)</span>, min <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>, max <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="co">## predicted gradients on test data</span></span>
-<span>  <span class="va">p.test.ood</span> <span class="op">&lt;-</span> <span class="fu">predict.ivarpro</span><span class="op">(</span><span class="va">imp</span>, newdata <span class="op">=</span> <span class="va">test.ood</span><span class="op">)</span></span>
+<span>  <span class="co">## predicted gradients on OOD test data</span></span>
+<span>  <span class="va">p.test.ood</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">imp</span>, newdata <span class="op">=</span> <span class="va">test.ood</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co">## partial plot showing support for x1</span></span>
-<span>  <span class="fu"><a href="partial.ivarpro.html">partial.ivarpro</a></span><span class="op">(</span><span class="va">p.test.ood</span>, var <span class="op">=</span> <span class="st">"x1"</span>, col.var <span class="op">=</span> <span class="st">"x2"</span>,</span>
-<span>             x.dist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"density"</span>, <span class="st">"rug"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p.test.ood</span>, var <span class="op">=</span> <span class="st">"x1"</span>, col.var <span class="op">=</span> <span class="st">"x2"</span>,</span>
+<span>       x.dist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"density"</span>, <span class="st">"rug"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="co">## reference lines for the original training support of x1</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span></span>
