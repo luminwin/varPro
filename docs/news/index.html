@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
       </span>
     </div>
 
@@ -82,13 +82,6 @@
     GitHub
   </a>
 </li>
-      </ul><ul class="nav navbar-nav navbar-right"><li>
-  <a href="https://github.com/kogalur/varPro/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-    GitHub
-  </a>
-</li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -104,7 +97,95 @@
 
     <div class="section level2">
       
-                                                              <div id="release-200" class="section level3">
+                                                              <div id="release-320" class="section level3">
+<h3 class="hasAnchor">
+<a href="#release-320" class="anchor"></a>RELEASE 3.2.0</h3>
+<h4 class="hasAnchor">New features</h4>
+<ul>
+<li>
+<p><code>partialpro()</code> gains a new <code>vt.filter</code> argument for selecting the virtual-twin filtering engine. The default, <code>vt.filter = "isopro"</code>, preserves the existing isolation-forest filtering behavior. New alternatives are <code>vt.filter = "outpro"</code>, which uses <code>outpro</code>-based out-of-distribution support, and <code>vt.filter = "none"</code>, which disables VT filtering.</p>
+</li>
+<li>
+<p>Added <code>outpro</code>-based VT filtering to <code>partialpro()</code>. For <code>vt.filter = "outpro"</code>, virtual twins are scored by an <code>outpro</code> distance, calibrated against an <code>outpro.null()</code> reference distribution, and converted to a support score. The existing <code>cut</code> option is retained: larger values require stronger support and <code>cut = 0</code> disables VT filtering.</p>
+</li>
+<li>
+<p>Added <code>distancef = "knn"</code> to <code>outpro()</code>. The KNN distance is computed in the standardized selected predictor subspace and provides a faster option for large prediction or virtual-twin grids because it does not require the forest-neighborhood distance construction.</p>
+</li>
+<li>
+<p>The <code>outpro</code> VT filter in <code>partialpro()</code> uses KNN distance by default through the hidden option <code>out.distancef = "knn"</code>. Additional advanced controls are available through <code>...</code>, including <code>out.neighbor</code>, <code>out.reduce</code>, <code>out.cutoff</code>, <code>out.max.rules.tree</code>, <code>out.max.tree</code>, <code>out.knn.chunk.size</code>, and <code>out.null</code>.</p>
+</li>
+<li>
+<p><code>outpro()</code> now supports <code>newdata.xscale</code>, allowing package-internal callers to pass new data that are already aligned to the fitted VarPro x-scale. This is useful for functions such as <code>partialpro()</code>, where virtual data are constructed directly from the stored VarPro design matrix.</p>
+</li>
+<li>
+<p><code>outpro.null()</code> now supports <code>nulldata.xscale</code>, providing the corresponding x-scale option for null/reference data.</p>
+</li>
+</ul>
+<h4 class="hasAnchor">Documentation</h4>
+<ul>
+<li>Expanded the <code>partialpro()</code> help file with a fuller description of the case-local partial-profile method, virtual-twin filtering, local polynomial smoothing, classification log-odds handling, binary-variable handling, and advanced options passed through <code>...</code>.</li>
+<li>Expanded the <code>outpro()</code> documentation to describe the KNN distance option and the x-scale handling used by package-internal calls.</li>
+</ul>
+<h4 class="hasAnchor">Bug fixes and refinements</h4>
+<ul>
+<li>Fixed hidden-option parsing in <code>partialpro()</code> so that <code>nodesize</code> is read from <code>nodesize</code>, not from <code>ntree</code>.</li>
+<li>
+<code>outpro.null()</code> now uses <code>cutoff = NULL</code> by default, matching the main <code>outpro()</code> cutoff-selection rule and keeping null calibration consistent with ordinary <code>outpro()</code> calls.</li>
+</ul>
+<hr>
+</div>
+
+                                                              <div id="release-310" class="section level3">
+<h3 class="hasAnchor">
+<a href="#release-310" class="anchor"></a>RELEASE 3.1.0</h3>
+<h4 class="hasAnchor">Breaking changes</h4>
+<ul>
+<li>
+<code>importance()</code> is now a true S3 generic rather than an alias-style front end.</li>
+<li>
+<code>partial.ivarpro()</code> has been replaced by <code>plot.ivarpro()</code>.</li>
+<li>The supported user-facing interfaces for fitted objects are now the corresponding S3 generics, such as <code>importance()</code>, <code>predict()</code>, and <code>plot()</code>.</li>
+</ul>
+<h4 class="hasAnchor">S3 interface cleanup</h4>
+<ul>
+<li>Registered <code>importance()</code> methods for <code>"varpro"</code> and <code>"uvarpro"</code> objects.</li>
+<li>Registered <code>plot()</code> methods for <code>"ivarpro"</code> and <code>"partialpro"</code> objects.</li>
+<li>Continued support for class-specific <code>predict()</code> methods through standard S3 dispatch for <code>"varpro"</code>, <code>"uvarpro"</code>, <code>"ivarpro"</code>, and <code>"isopro"</code> objects.</li>
+</ul>
+<h4 class="hasAnchor">Documentation</h4>
+<ul>
+<li>Help topics retain dotted method names such as <code>plot.ivarpro</code>, <code>plot.partialpro</code>, <code>predict.ivarpro</code>, <code>predict.varpro</code>, <code>predict.uvarpro</code>, and <code>predict.isopro</code> so that method pages remain easy to find in the reference manual and via <code>?topic</code>.</li>
+<li>Usage sections were updated to show S3 method signatures consistently, for example <code>\method{plot}{ivarpro}(x, ...)</code> and <code>\method{predict}{ivarpro}(object, ...)</code>.</li>
+<li>Examples were updated to use the generic forms <code>plot(x, ...)</code>, <code>predict(object, ...)</code>, and <code>importance(object)</code>.</li>
+<li>The iVarPro plotting documentation now uses <code>data</code> for the original feature matrix and documents <code>target</code> explicitly for multivariate and multiclass outputs.</li>
+</ul>
+<h4 class="hasAnchor">Migration notes</h4>
+<ul>
+<li>Replace calls of the form <code>partial.ivarpro(iv, var = ...)</code> with <code>plot(iv, var = ...)</code>.</li>
+<li>Prefer <code>importance(fit)</code> over direct calls to <code>importance.varpro(fit)</code>.</li>
+<li>Prefer <code>predict(fit, ...)</code> over direct calls to <code>predict.class(fit, ...)</code>.</li>
+</ul>
+<hr>
+</div>
+
+                                                              <div id="release-300" class="section level3">
+<h3 class="hasAnchor">
+<a href="#release-300" class="anchor"></a>RELEASE 3.0.0</h3>
+<h4 class="hasAnchor">Improvements</h4>
+<ul>
+<li>Refactored <code>varpro.strength()</code> to reduce R-side post-processing overhead after the native <code>varProStrength</code> call, improving performance on large forests and large membership reconstructions.</li>
+<li>Improved scalability and stability of <code>varpro.strength(..., membership = TRUE)</code> for very large analyses.</li>
+<li>For RHF grow objects, <code>varpro.strength()</code> now uses the integrated hazard exposure values stored on the fitted object (<code>int.haz.oob</code>) as the default working response when available.</li>
+<li>Internal cleanup of native-output decoding and membership reconstruction logic.</li>
+</ul>
+<h4 class="hasAnchor">Bug fixes</h4>
+<ul>
+<li>Fixed a failure that could occur on very large analyses when rebuilding membership lists in R after native execution, which could previously surface as an integer-overflow warning from <code>cumsum()</code> followed by a downstream missing-value error in membership reconstruction.</li>
+</ul>
+<hr>
+</div>
+      
+                                                              <div id="release-210" class="section level3">
 <h3 class="hasAnchor">
 <a href="#release-210" class="anchor"></a>RELEASE 2.1.0</h3>
 <p>Major refactoring/enhancement to functions downstream from entry
