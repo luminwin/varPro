@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -97,6 +97,47 @@
 
     <div class="section level2">
       
+                                                              <div id="release-330" class="section level3">
+<h3 class="hasAnchor">
+<a href="#release-330" class="anchor"></a>RELEASE 3.3.0</h3>
+<h4 class="hasAnchor">New features</h4>
+<ul>
+<li><code>cv.varpro()</code> gains optional outer cross-validation through <code>cv.folds</code> and <code>foldid</code>, with held-out prediction errors, selection frequencies, and importance-stability summaries for all three selection rules. The default, <code>cv.folds = 0</code>, retains OOB-based selection without outer cross-validation.</li>
+<li><code>varpro()</code> objects now include <code>model.info</code>, recording original and working responses, survival targets and RMST horizons, class-label mappings, and effective forest settings. <code>model.info$observations</code> also records input, retained, and omitted row counts, including in <code>split.weight.only</code> results (#7).</li>
+</ul>
+<h4 class="hasAnchor">Interface changes</h4>
+<ul>
+<li>Removed iVarPro cut-ladder storage and plotting bands. <code>plot()</code> for iVarPro objects no longer supports <code>ladder</code>, <code>ladder.cuts</code>, or <code>ladder.max.segments</code>; remove these arguments from existing calls.</li>
+<li><code>varpro()</code>, <code>partialpro()</code>, <code>rf.learner()</code>, <code>gbm.learner()</code>, and <code>bart.learner()</code> now reject unnamed options, unrecognized names, and duplicate names in <code>...</code> (#7). This includes unsupported <code>na.action</code> in <code>varpro()</code> and <code>RMST</code>, <code>rmst</code>, and <code>time</code> in <code>partialpro()</code>.</li>
+<li><code>rf.learner()</code> now rejects user-supplied <code>formula</code>, <code>data</code>, <code>xvar.wt</code>, and <code>perf.type</code>, which the wrapper sets internally (#7).</li>
+</ul>
+<h4 class="hasAnchor">Bug fixes and refinements</h4>
+<ul>
+<li>Added long vector support for SEXP input-output, internal transient allocations, and offset handling.</li>
+<li>Importance summaries now map encoded columns to original predictors exactly, avoiding substring and regular-expression name collisions and incorrect pooling across responses. <code>get.orgvimp()</code> now reuses a supplied <code>vmp</code> summary.</li>
+<li>Fixed multivariate importance-column handling and CV importance extraction for empty selections and forced one-variable models.</li>
+<li>Improved hot-encoding of single-level factors and factors with nonsyntactic names. Internal survival-response names now avoid predictor-name collisions.</li>
+<li>Fixed <code>ivarpro()</code> to honor <code>scale = "global"</code> and <code>scale = "none"</code> throughout neighborhood searches and exclude invalid local fits with <code>use.loo = FALSE</code>.</li>
+<li>Corrected multivariate VarPro OOB-prediction extraction in <code>ivarpro()</code> and preserved all columns of user-supplied <code>y.external</code> responses.</li>
+<li>Fixed iVarPro prediction to reuse training hot-encoding, preserve row alignment, honor <code>noise.na</code> overrides, and restore training OOB scores when <code>predict()</code> is called without <code>newdata</code>, including on a prediction result.</li>
+<li>Improved iVarPro plotting with a single retained predictor, numeric gradient matrices, and plotting data containing unrelated nonnumeric columns.</li>
+<li>Corrected survival CRPS evaluation to use the evaluation outcomes and matching censoring predictions, including in the fast fitting path. Evaluation with <code>nblocks = 1</code> now respects supplied held-out data.</li>
+<li>Improved <code>cv.varpro()</code> input validation, cutoff ordering, and handling of unavailable prediction errors, with warnings when no candidate error is finite.</li>
+<li>Applied RFQ imbalance controls consistently in the rule-generating forest and cross-validation candidate forests.</li>
+<li>Fixed <code>get.rmst()</code> to use full-ensemble survival estimates with an OOB fallback, validate time horizons, and preserve matrix dimensions for small inputs and response identities for multiple horizons. The integral now uses survival at each interval's left endpoint (#7).</li>
+<li>Fixed <code>varpro.strength(..., stat = "oob")</code> to return <code>meanOOB</code> for regression.</li>
+<li>Fixed <code>sdependent()</code> to align importance-matrix rows and columns by variable name before clearing self-links, fill missing release rows with zeros, and validate matrix values and names.</li>
+<li><code>varpro()</code> now warns when preprocessing omits observations with missing values, reporting the input, omitted, and retained counts (#7).</li>
+</ul>
+<h4 class="hasAnchor">Documentation</h4>
+<ul>
+<li>Expanded documentation and examples for VarPro selection, cross-validation, iVarPro fitting and prediction, outPro scoring and calibration, and UVarPro local lasso analysis and dependence graphs.</li>
+<li>Documented <code>shap.ivarpro()</code> with the iVarPro plotting methods and <code>get.beta.entropy()</code> and <code>sdependent()</code> with <code>uvarpro()</code>.</li>
+<li>Documented validation of additional arguments, supported learner controls, and observation counts (#7).</li>
+</ul>
+<hr>
+</div>
+
                                                               <div id="release-320" class="section level3">
 <h3 class="hasAnchor">
 <a href="#release-320" class="anchor"></a>RELEASE 3.2.0</h3>

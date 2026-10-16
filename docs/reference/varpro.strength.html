@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Model-Independent Variable Selection with Variable Priority</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.3.0</span>
       </span>
     </div>
 
@@ -146,7 +146,10 @@
 
 
   <dt id="arg-stat">stat<a class="anchor" aria-label="anchor" href="#arg-stat"></a></dt>
-<dd><p>Statistic to output. Options include <code>"importance"</code>, <code>"complement mean"</code>, and <code>"oob mean"</code>.</p></dd>
+<dd><p>Statistic to return: <code>"importance"</code> for release
+    importance, <code>"complement"</code> for the complementary-region
+    response summary, <code>"oob"</code> for the original-region OOB response
+    summary, or <code>"none"</code> to omit response summaries.</p></dd>
 
 
   <dt id="arg-membership">membership<a class="anchor" aria-label="anchor" href="#arg-membership"></a></dt>
@@ -195,10 +198,10 @@
 <span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">randomForestSRC</span><span class="fu">::</span><span class="fu"><a href="https://www.randomforestsrc.org//reference/rfsrc.html">rfsrc</a></span><span class="op">(</span><span class="va">medv</span><span class="op">~</span><span class="va">.</span>, <span class="va">BostonHousing</span>, ntree<span class="op">=</span><span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## call varpro.strength</span></span>
-<span><span class="fu">varpro.strength</span><span class="op">(</span>object <span class="op">=</span> <span class="va">o</span>, max.rules.tree <span class="op">=</span> <span class="fl">10</span>, max.tree <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="va">vs</span> <span class="op">&lt;-</span> <span class="fu">varpro.strength</span><span class="op">(</span>object <span class="op">=</span> <span class="va">o</span>, max.rules.tree <span class="op">=</span> <span class="fl">10</span>, max.tree <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## call varpro.strength with test data</span></span>
-<span><span class="fu">varpro.strength</span><span class="op">(</span>object <span class="op">=</span> <span class="va">o</span>, newdata <span class="op">=</span> <span class="va">BostonHousing</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="op">]</span>, max.rules.tree <span class="op">=</span> <span class="fl">10</span>, max.tree <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="va">vs</span> <span class="op">&lt;-</span> <span class="fu">varpro.strength</span><span class="op">(</span>object <span class="op">=</span> <span class="va">o</span>, newdata <span class="op">=</span> <span class="va">BostonHousing</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,<span class="op">]</span>, max.rules.tree <span class="op">=</span> <span class="fl">10</span>, max.tree <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># }</span></span></code></pre></div>
     </div>
